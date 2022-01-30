@@ -1,0 +1,194 @@
+\documentclass{article}
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[normalem]{ulem}
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{indentfirst}
+\geometry{a4paper,bindingoffset=0.2in,%
+	left=1in,right=1in,top=1in,bottom=1in,%
+	footskip=.25in}
+
+\onehalfspacing
+
+%opening
+\title{MECHTRON 4TB6: Development Process \\ LifeLine}
+\author{Group 30 \\ Emily Crowe, crowee \\ Arthur Faron, farona \\ Danushka Fernando, fernad12 \\Yerin Thevarajah, thevaryn \\ Phillip Truong, truonp1}
+
+\begin{document}
+
+    \date{October 24, 2021}
+	\maketitle
+	\newpage
+    
+	\tableofcontents
+
+	\newpage
+
+	\section{Overall Process Workflow}
+    \begin{enumerate}
+        \item Sensor selection for body temperature, blood pressure, and heart rate as well as micro-controller
+        \begin{itemize}
+            \item Input: Literature review
+            \item Output: Bill of Materials (BOM)
+            \item Acceptance Criteria: Bill of Materials (BOM) for all sensors is finalized including the model of each sensor, the source where it is to be acquired, the price and the lead time.
+            \item Tools Required: none 
+        \end{itemize}
+        
+        \item Electrical schematics development
+        \begin{itemize}
+            \item Input: Sensors and micro-controller
+            \item Output: Completed schematics and block diagrams
+            \item Acceptance Criteria: Bill of Materials (BOM) for micro-controller and all electrical components is finalized including the model of each component, the source where it is to be acquired, the price and the lead time.  System block diagrams are finalized.  PCB schematics and Gerber files are finalized.
+            \item Tools Required: Autodesk Eagle 9.6.2 (latest version as of the creation of this document), Lucidchart
+        \end{itemize}
+        
+        \item Selected sensors, micro-controller, and peripherals acquisition
+        \begin{itemize}
+            \item Input: Schematics, Bill of Materials (BOM)
+            \item Output: Parts for validation and verification
+            \item Acceptance Criteria: All items specified in the sensor and electrical component Bills of Materials (BOMs) have been acquired. 
+            \item Tools Required: none
+        \end{itemize}
+        
+        \item Parts validation and verification
+        \begin{itemize}
+            \item Input: Parts (sensors, micro-controller, peripherals)
+            \item Output: Test results and validated parts
+            \item Acceptance Criteria: All parts are in working order and comply with the stated specifications.
+            \item Tools Required: Oscilloscope, breadboard, power supply
+        \end{itemize}
+        
+        \item Electrical circuit assembly
+        \begin{itemize}
+            \item Input: Schematics, sensors, micro-controller, circuit board, and peripherals
+            \item Output: Electrical circuit
+            \item Acceptance Criteria:  All wires are neat, tidy, and secure.  Each component is functioning within the limits specified on the datasheet. The circuit is cool in room temperature.
+            \item Tools required: Soldering iron, oscilloscope 
+        \end{itemize}
+        
+        \item Display output and formatting
+        \begin{itemize}
+            \item Input: Multiple sensor inputs from each sensor that will be measured and evaluated.
+            \item Output: Display with quantitative measurements from sensors with acceptable presentation of display.
+            \item Acceptance Criteria:  All code is tested and displayed appropriately
+            \item Tools required: IDE for chosen programming language, Git for tracking changes
+        \end{itemize}
+        
+        \item Code development
+        \begin{itemize}
+            \item Input: Programming Sequence Flowchart
+            \item Output: Fully functional code for the device
+            \item Acceptance Criteria: Clear, well-commented code. Display, micro-controller, and electrical assembly is fully functional and meets all requirements. Signal noise is adequately filtered to provide usable data.  Primary vitals data is visible on the display. 
+            \item Tools Required: IDE for chosen programming language, Git for tracking changes
+        \end{itemize}
+        
+        \item CAD model of device housing
+        \begin{itemize}
+            \item Input: Electrical circuit assembly dimensions
+            \item Output: CAD model
+            \item Acceptance Criteria: CAD model houses all electrical components and meets weight and dimension requirements. CAD model is possible to manufacture using available tools such as 3D printers and laser cutters.  
+            \item Tools Required: Autodesk Inventor 2022.1.1 (latest version as of the creation of this document)
+        \end{itemize}
+        
+        \item Device housing assembly
+        \begin{itemize}
+            \item Input: 3D printing material, hardware (nuts, bolts etc.)
+            \item Output: Completed device housing
+            \item Acceptance Criteria: Assembled housing meets weight, dimension, safety, and durability requirements. Housing securely fits all electrical components as intended.
+            \item Tools Required: 3D printer, laser cutter
+        \end{itemize}
+        
+        \item Device assembly
+        \begin{itemize}
+            \item Input: Electrical circuit, device housing 
+            \item Output: Fully assembled device
+            \item Acceptance Criteria: Assembled device meets weight, dimension, safety, and durability requirements. Housing securely fits all electrical components as intended. Device can be safely used while following the normal operation procedure.
+            \item Tools Required: Adhesives, hardware, tools
+        \end{itemize}
+        
+        \item Verification and validation
+        \begin{itemize}
+            \item Input: Fully assembled device
+            \item Output: Test results
+            \item Acceptance Criteria: Primary vitals measured by LifeLine (body temperature, blood pressure, and heart rate) are verified against standard vitals' measurement techniques.  The device meets the accuracy specified in the project requirements.  Device fully meets all functional requirements specified per the latest revision of the project requirements document.
+            \item Tools Required: Oscilloscope, reference devices for  vitals' measurements
+        \end{itemize}
+    \end{enumerate}
+
+    \section{Version Control}
+    The project members are expected to use a Github Repository in order to keep track of all software changes and have a stable build at all times.  In order to make sure the changes creates by other will not affect this process, they will work on other branches and commits which will then be merged after verifying with all team members.  Tests can be done separately.
+    
+    Github can also help with creating and assigning tasks to the members of this project and keep track of due dates as well.
+
+    All software developed for the LifeLine device shall be version controlled through the team's Git repository. All CAD models developed for the LifeLine device shall be version controlled through the team's Git repository. 
+    \section{Project Standards}
+    All diagrams and schematics will be clearly identifiable and include the title, designer's name, date, revision number, and scale. To generate a Bill of Materials for the required parts, Autodesk Eagle will be used. Autodesk Eagle and Inventor will be used to generate any electrical and mechanical schematics, respectively. The Group 30 Microsoft Teams channel will be the primary method of communication between group members.  All reports will be generated using Overleaf, an online LaTeX editor.  Any flowcharts or block diagrams will be created using Lucidchart, a web-based platform for creating charts.
+    
+    \subsection{IPC Standards}
+    Due to the scope of this project, the device will not conform to IPC Class 3 standards for electronics which is typically required for medical devices.  However, IPC standards and best practices will be used wherever possible.  
+    
+    
+    \newpage
+    
+    \section{Roles and Responsibilities}
+        \subsection{Emily Crowe - Electrical and Biomedical}
+            \begin{itemize}
+                \item Sensor selection for body temperature, blood pressure, and heart rate as well as micro-controller
+                \item Parts validation and verification
+                \item Electrical circuit assembly
+                \item Device assembly
+                \item Verification and validation
+            \end{itemize}
+        \subsection{Arthur Faron - Mechatronics}
+            \begin{itemize}
+                \item CAD model of device housing
+                \item Device housing assembly
+                \item Code development
+                \item Device assembly
+                \item Verification and validation
+            \end{itemize}
+        \subsection{Danushka Fernando - Electrical}
+            \begin{itemize}
+                \item Sensor selection for body temperature, blood pressure, and heart rate as well as micro-controller
+                \item Selected sensors, micro-controller, and peripherals acquisition
+                \item Electrical circuit assembly
+                \item Device assembly
+                \item Verification and validation
+            \end{itemize}
+        \subsection{Yerin Thevarajah - Software and Embedded Systems}
+            \begin{itemize}
+                \item Sensor selection for body temperature, blood pressure, and heart rate as well as micro-controller
+                \item Display Output and Formatting
+                \item Code development
+                \item Device assembly
+                \item Verification and validation
+            \end{itemize}
+        \subsection{Phillip Truong - Electrical and Biomedical}
+            \begin{itemize}
+                \item Sensor selection for body temperature, blood pressure, and heart rate as well as micro-controller
+                \item Electrical circuit assembly
+                \item Electrical schematics development
+                \item Device assembly
+                \item Verification and validation
+            \end{itemize}
+        \subsection{Avoidance of failures in processes}
+        Whenever a group member encounters a delay in the completion of a stage in the project, these delays must be communicated to the rest of the group members. It is important to maintain contact among group members as a delay in one portion of the development process can affect another portion. Group members are also encouraged to assign specific due dates for themselves that are before the actual due date so that there is adequate time available to make any necessary modifications. 
+        
+	\section{Change Management}
+	\begin{itemize}
+	    \item This can be done using the Git Repository for the software portion and documentation for other portions, as a new issue can be made which will automatically inform the rest of the members
+	    \item A new branch can be created
+	    \item The code will be tested against the new code and the code that is already in place to make sure the code changes will not negatively affect other parts of the project
+	    \item Unit testing can be used for this
+	    \item Once verification and approval from all members is obtained, the branch can then be merged
+	    \item Issue is then closed 
+	\end{itemize}
+
+\end{document}
