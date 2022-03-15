@@ -1,0 +1,65 @@
+import serial
+import time
+
+ser = serial.Serial("/dev/ttyACM0", 56700, timeout=1)
+
+# Reset the Arduino's line. This is key to getting the write to work.
+# Without it, the first few writes don't work.
+# Clear DTR, wait one second, flush input, then set DTR.
+# Without this, the first write fails.
+# This trick was learned from:
+# https://github.com/miguelasd688/4-legged-robot-model
+
+global startMeasuring
+startMeasuring = False
+count = 0
+
+ser.setDTR(False)
+time.sleep(1)
+ser.flushInput()
+ser.setDTR(True)
+time.sleep(2)
+
+def getStartMeasuring():
+	return startMeasuring
+	
+def setStartMeasuring(val):
+	global startMeasuring
+	startMeasuring = val
+
+while True:
+	if count == 5:
+		setStartMeasuring(True)
+		
+	count += 1
+	print(count)
+	print(startMeasuring)
+	
+	startMeasuringTrigger = getStartMeasuring()
+	
+	if(startMeasuringTrigger):
+		print('Telling the Arduino to start measuring...')
+		ser.write(b'0')
+
+		# read to get the acknowledgement from the Arduino
+		while True:
+			ack = ser.read()
+			if ack == b'A':
+				break
+			else:
+				msg = ser.readline()
+				print(msg)
+		print('Arduino sent back %s' % ack)
+		setStartMeasuring(False)
+	else:
+		print('startMeasuringTrigger not enabled')
+
+	serRx = ser.read()
+	if serRx == b'T':
+		sensorValues = ser.readline()
+		print(sensorValues)
+	else:
+		print("no sensor values received")
+		
+
+	time.sleep(2)
