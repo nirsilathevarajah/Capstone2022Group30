@@ -9,6 +9,7 @@ import csv
 import os
 import datetime
 import options
+#import piSerialHandler
 
 class ServoDrive(object):
     # simulate values
@@ -40,7 +41,7 @@ class Vitals(customtkinter.CTk):
         self.heartRateVal = 0
         self.paused = False
         self.firstStart = True
-        self.file_num = 1
+        self.start_time = self.startTime()
 
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
         if sys.platform == "darwin":
@@ -179,7 +180,7 @@ class Vitals(customtkinter.CTk):
         self.create_bt_canvas()
         self.create_bp_canvas()
         self.create_hr_canvas()
-        self.file_num = self.file_num + 1
+        self.start_time = self.startTime()
         self.update_vitals()
 
     def create_stop_button(self):
@@ -204,9 +205,14 @@ class Vitals(customtkinter.CTk):
         bloodPresDias = self.bloodPresDiasVal = self.servo.getBloodPresDias()
         bloodPresSys = self.bloodPresSysVal = self.servo.getBloodPresSys()
         heartRate = self.heartRateVal = self.servo.getBodyTemp()
+
+        # bodyTemp = self.bodyTempVal = piSerialHandler.getSensorValues()[0]
+        # bloodPresDias = self.bloodPresDiasVal = piSerialHandler.getSensorValues()[1]
+        # bloodPresSys = self.bloodPresSysVal = piSerialHandler.getSensorValues()[2]
+        # heartRate = self.heartRateVal = piSerialHandler.getSensorValues()[3]
+        file_name = 'Data/patient_'+ str(self.start_time) +'.csv'
         now = datetime.datetime.now()
-        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-        file_name = 'Data/patient_file_'+ str(self.file_num) +'.csv'
+        dt_string = now.strftime("%d/%m/%Y, %H:%M:%S, ")
         with open(file_name, 'a') as patient_file:
             patient_vitals = csv.writer(patient_file)
             patient_vitals.writerow([dt_string, bodyTemp, bloodPresDias, bloodPresSys, heartRate])
@@ -360,6 +366,12 @@ class Vitals(customtkinter.CTk):
         
     def start(self):
         self.mainloop()
+
+    def startTime(self):
+        now = datetime.datetime.now()
+        dt_string = now.strftime("%d%b_%Hh%Mm%Ss")
+        return dt_string
+
 
 def center_window(root, width=400, height=300):
 	screen_width = root.winfo_screenwidth()
