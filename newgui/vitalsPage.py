@@ -14,7 +14,7 @@ import piSerialHandlerV2
 class ServoDrive(object):
     # simulate values
     def getBodyTemp(self): 
-        return random.randint(24,50)
+        return random.randint(25,50)
     def getBloodPresDias(self): 
         return random.randint(0,250)
     def getBloodPresSys(self): 
@@ -242,27 +242,27 @@ class Vitals(customtkinter.CTk):
         coords = self.canvas_bt.coords(line)
         x = coords[-2] + 5
         coords.append(x)
-        coords.append(y*7)
+        coords.append(self.norm(y, 0, 50))
         coords = coords[-500:] # keep # of points to a manageable size
         self.canvas_bt.coords(line, *coords)
         self.canvas_bt.configure(scrollregion=self.canvas_bt.bbox("all"))
     
     def add_body_temp_high(self, line):
-        y2 = self.canvas_height - 20
+        y2 = 40
         coords = self.canvas_bt.coords(line)
         x = coords[-2] + 5
         coords.append(x)
-        coords.append(y2)
+        coords.append(self.norm(y2, 0, 50))
         coords = coords[-500:] # keep # of points to a manageable size
         self.canvas_bt.coords(line, *coords)
         self.canvas_bt.configure(scrollregion=self.canvas_bt.bbox("all"))
 
     def add_body_temp_low(self, line):
-        y2 = self.canvas_height 
+        y2 = 32 
         coords = self.canvas_bt.coords(line)
         x = coords[-2] + 5
         coords.append(x)
-        coords.append(y2)
+        coords.append(self.norm(y2, 0, 50))
         coords = coords[-500:] # keep # of points to a manageable size
         self.canvas_bt.coords(line, *coords)
         self.canvas_bt.configure(scrollregion=self.canvas_bt.bbox("all"))
@@ -285,7 +285,7 @@ class Vitals(customtkinter.CTk):
         coords = self.canvas_bp.coords(line)
         x = coords[-2] + 5
         coords.append(x)
-        coords.append(y)
+        coords.append(self.norm(y, 0, 180))
         coords = coords[-500:] # keep # of points to a manageable size
         self.canvas_bp.coords(line, *coords)
         self.canvas_bp.configure(scrollregion=self.canvas_bp.bbox("all"))
@@ -294,27 +294,27 @@ class Vitals(customtkinter.CTk):
         coords = self.canvas_bp.coords(line)
         x = coords[-2] + 5
         coords.append(x)
-        coords.append(y)
+        coords.append(self.norm(y, 0, 180))
         coords = coords[-500:] # keep # of points to a manageable size
         self.canvas_bp.coords(line, *coords)
         self.canvas_bp.configure(scrollregion=self.canvas_bp.bbox("all"))
 
     def add_blood_pres_low(self, line):
-        y_low = 50
+        y_low = 60
         coords = self.canvas_bp.coords(line)
         x = coords[-2] + 5
         coords.append(x)
-        coords.append(y_low)
+        coords.append(self.norm(y_low, 0, 180))
         coords = coords[-500:] # keep # of points to a manageable size
         self.canvas_bp.coords(line, *coords)
         self.canvas_bp.configure(scrollregion=self.canvas_bp.bbox("all"))
 
     def add_blood_pres_high(self, line):
-        y_high = 90
+        y_high = 140
         coords = self.canvas_bp.coords(line)
         x = coords[-2] + 5
         coords.append(x)
-        coords.append(y_high)
+        coords.append(self.norm(y_high, 0, 180))
         coords = coords[-500:] # keep # of points to a manageable size
         self.canvas_bp.coords(line, *coords)
         self.canvas_bp.configure(scrollregion=self.canvas_bp.bbox("all"))
@@ -334,7 +334,7 @@ class Vitals(customtkinter.CTk):
         coords = self.canvas_hr.coords(line)
         x = coords[-2] + 5
         coords.append(x)
-        coords.append(y)
+        coords.append(self.norm(y, 0, 200))
         coords = coords[-500:] # keep # of points to a manageable size
         self.canvas_hr.coords(line, *coords)
         self.canvas_hr.configure(scrollregion=self.canvas_hr.bbox("all"))
@@ -344,17 +344,17 @@ class Vitals(customtkinter.CTk):
         coords = self.canvas_hr.coords(line)
         x = coords[-2] + 5
         coords.append(x)
-        coords.append(y_low)
+        coords.append(self.norm(y_low, 0, 200))
         coords = coords[-500:] # keep # of points to a manageable size
         self.canvas_hr.coords(line, *coords)
         self.canvas_hr.configure(scrollregion=self.canvas_hr.bbox("all"))
 
     def add_heart_rate_high(self, line):
-        y_high = 90
+        y_high = 100
         coords = self.canvas_hr.coords(line)
         x = coords[-2] + 5
         coords.append(x)
-        coords.append(y_high)
+        coords.append(self.norm(y_high, 0, 200))
         coords = coords[-500:] # keep # of points to a manageable size
         self.canvas_hr.coords(line, *coords)
         self.canvas_hr.configure(scrollregion=self.canvas_hr.bbox("all"))
@@ -372,6 +372,10 @@ class Vitals(customtkinter.CTk):
         now = datetime.datetime.now()
         dt_string = now.strftime("%d%b_%Hh%Mm%Ss")
         return dt_string
+        
+    def norm(self, y, xmin, xmax):
+        norm_val = ((y - xmin)/(xmax - xmin))*(self.canvas_height)
+        return norm_val
         
 def getSensorVitals():
         sensorValuesInt = [0, 0, 0, 0]
