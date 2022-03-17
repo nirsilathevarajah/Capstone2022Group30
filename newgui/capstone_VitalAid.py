@@ -4,6 +4,7 @@ import tkinter.messagebox
 import customtkinter
 import sys
 import vitalsPage
+import piSerialHandlerV2
 
 class App(customtkinter.CTk):
 
@@ -49,6 +50,14 @@ class App(customtkinter.CTk):
     def button_event(self):
         print("Button pressed")
         #self.frame_right.destroy()
+        toplevel = customtkinter.CTkToplevel()
+        center_window(toplevel, 300, 150)
+        frame1 = customtkinter.CTkFrame(toplevel)
+        frame1.pack()
+        label5 = customtkinter.CTkLabel(frame1, text= "CALIBRATING, PLEASE WAIT")
+        label5.grid(row=1, column=0, pady=10, padx=20)
+        piSerialHandlerV2.setStartMeasuring(True)
+        toplevel.destroy()
         self.on_closing()
         app= vitalsPage.Vitals()
         app.start()
@@ -58,4 +67,14 @@ class App(customtkinter.CTk):
         
     def start(self):
         self.mainloop()
+        
+def center_window(root, width=400, height=300):
+	screen_width = root.winfo_screenwidth()
+	screen_height = root.winfo_screenheight()
+	# calculate x and y coordinates for the Tk root window
+	x = (screen_width/2) - (width/2)
+	y = (screen_height/2) - (height/2)
+	# set the dimensions of the screen 
+	# and where it is placed
+	root.geometry('%dx%d+%d+%d' % (width, height, x, y))
 

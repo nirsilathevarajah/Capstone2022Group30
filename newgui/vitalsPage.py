@@ -9,14 +9,14 @@ import csv
 import os
 import datetime
 import options
-#import piSerialHandler
+import piSerialHandlerV2
 
 class ServoDrive(object):
     # simulate values
     def getBodyTemp(self): 
-        return random.randint(0,200)
+        return random.randint(24,50)
     def getBloodPresDias(self): 
-        return random.randint(0,200)
+        return random.randint(0,250)
     def getBloodPresSys(self): 
         return random.randint(0,200)
     def getHeartRate(self): 
@@ -192,6 +192,7 @@ class Vitals(customtkinter.CTk):
     def create_start_button(self):
         self.button_2 = customtkinter.CTkButton(master=self.frame_left, bg_color="green", text="START", command=self.start_button, fg_color=None, width=Vitals.WIDTH/6, height=(Vitals.HEIGHT/2)-75, border_width=2)
         self.button_2.grid(row=2, column=0, pady=10, padx=20)
+        print(Vitals.WIDTH)
         self.paused = True
 
     def create_start_button1(self):
@@ -201,15 +202,15 @@ class Vitals(customtkinter.CTk):
 
 
     def getVitals(self):
-        bodyTemp = self.bodyTempVal = self.servo.getBodyTemp()
-        bloodPresDias = self.bloodPresDiasVal = self.servo.getBloodPresDias()
-        bloodPresSys = self.bloodPresSysVal = self.servo.getBloodPresSys()
-        heartRate = self.heartRateVal = self.servo.getBodyTemp()
+        # bodyTemp = self.bodyTempVal = self.servo.getBodyTemp()
+        # bloodPresDias = self.bloodPresDiasVal = self.servo.getBloodPresDias()
+        # bloodPresSys = self.bloodPresSysVal = self.servo.getBloodPresSys()
+        # heartRate = self.heartRateVal = self.servo.getBodyTemp()
 
-        # bodyTemp = self.bodyTempVal = piSerialHandler.getSensorValues()[0]
-        # bloodPresDias = self.bloodPresDiasVal = piSerialHandler.getSensorValues()[1]
-        # bloodPresSys = self.bloodPresSysVal = piSerialHandler.getSensorValues()[2]
-        # heartRate = self.heartRateVal = piSerialHandler.getSensorValues()[3]
+        bodyTemp = self.bodyTempVal = getSensorVitals()[0]
+        bloodPresDias = self.bloodPresDiasVal = getSensorVitals()[1]
+        bloodPresSys = self.bloodPresSysVal = getSensorVitals()[2]
+        heartRate = self.heartRateVal = getSensorVitals()[3]
         file_name = 'Data/patient_'+ str(self.start_time) +'.csv'
         now = datetime.datetime.now()
         dt_string = now.strftime("%d/%m/%Y, %H:%M:%S, ")
@@ -241,13 +242,13 @@ class Vitals(customtkinter.CTk):
         coords = self.canvas_bt.coords(line)
         x = coords[-2] + 5
         coords.append(x)
-        coords.append(100-y)
+        coords.append(y*7)
         coords = coords[-500:] # keep # of points to a manageable size
         self.canvas_bt.coords(line, *coords)
         self.canvas_bt.configure(scrollregion=self.canvas_bt.bbox("all"))
     
     def add_body_temp_high(self, line):
-        y2 = 90
+        y2 = self.canvas_height - 20
         coords = self.canvas_bt.coords(line)
         x = coords[-2] + 5
         coords.append(x)
@@ -257,7 +258,7 @@ class Vitals(customtkinter.CTk):
         self.canvas_bt.configure(scrollregion=self.canvas_bt.bbox("all"))
 
     def add_body_temp_low(self, line):
-        y2 = 50
+        y2 = self.canvas_height 
         coords = self.canvas_bt.coords(line)
         x = coords[-2] + 5
         coords.append(x)
@@ -276,7 +277,7 @@ class Vitals(customtkinter.CTk):
         self.add_blood_pres_high(self.bp_high_line)
         self.add_blood_pres_low(self.bp_low_line)
         self.canvas_bp.xview_moveto(1.0)
-        self.label_info_bp_val.set_text(str(bloodPresDias) + '/' + str(bloodPresSys))
+        self.label_info_bp_val.set_text(str(bloodPresSys) + '/' + str(bloodPresDias))
         if self.paused == False:
             self.after(1000, self.update_blood_pres)
 
@@ -371,12 +372,19 @@ class Vitals(customtkinter.CTk):
         now = datetime.datetime.now()
         dt_string = now.strftime("%d%b_%Hh%Mm%Ss")
         return dt_string
+        
+def getSensorVitals():
+        sensorValuesInt = [0, 0, 0, 0]
+        sensorValues = piSerialHandlerV2.getSensorValues()
+        sensorValuesInt[0] = round(float(sensorValues[0]),2)
+        for i in range(1, len(sensorValues)):
+                sensorValuesInt[i] = int(sensorValues[i])
+        return sensorValuesInt
 
 
 def center_window(root, width=400, height=300):
 	screen_width = root.winfo_screenwidth()
 	screen_height = root.winfo_screenheight()
-
 	# calculate x and y coordinates for the Tk root window
 	x = (screen_width/2) - (width/2)
 	y = (screen_height/2) - (height/2)

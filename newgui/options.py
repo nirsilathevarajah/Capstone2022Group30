@@ -25,21 +25,34 @@ class RecalibratePage(Page):
 class FilesPage(Page):
    def __init__(self, *args, **kwargs):
        Page.__init__(self, *args, **kwargs)
-       filenames = next(os.walk("Data/"))[2]
        self.arr = []
+       self.frame_left = CTkFrame(master=self,width=300, corner_radius=0)
+       self.frame_left.grid(row=0, column=0, sticky="nswe")
+       self.frame_right = CTkFrame(master=self, width=420, height=2000-40, corner_radius=12)
+       self.frame_right.grid(row=0, column=1, sticky="nswe", padx=20, pady=20)
+       button_instuctions = CTkButton(self.frame_left, text="Delete", text_font=("Roboto Medium", -40), command=self.mark_checkbox, fg_color=None, hover = True, border_width=2)
+       button_instuctions.pack(side = "top")
+       button_instuctions = CTkButton(self.frame_left, text="Export", text_font=("Roboto Medium", -40), command=self.mark_checkbox, fg_color=None, hover = True, border_width=2)
+       button_instuctions.pack(side = "top")
+       
+   def update_files(self):
+       filenames = next(os.walk("Data/"))[2]
        for i in range(len(filenames)):
            self.arr.append('check_box' + str(i))
        for i in range(len(filenames)):
-           self.arr[i] = CTkCheckBox(master=self, text=filenames[i], text_font=("Roboto Medium", -40))
+           self.arr[i] = CTkCheckBox(self.frame_left, text=filenames[i], text_font=("Roboto Medium", -40))
            self.arr[i].pack(side = "top")
-
-       button_instuctions = CTkButton(master=self, text="Button", text_font=("Roboto Medium", -40), command=self.mark_checkbox, fg_color=None, hover = True, border_width=2)
-       button_instuctions.pack(side = "top")
         
    def mark_checkbox(self):
+       delete_files = []
        for i in range(len(self.arr)):
            if (self.arr[i]).check_state == True:
+               delete_files.append(self.arr[i].text)
                print(self.arr[i].text)
+       for i in delete_files:
+           if i in self.arr:
+               os.delete("Data/"+ i)
+       self.update_files()
 
 
 class MainView(CTkFrame):
