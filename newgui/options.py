@@ -26,34 +26,38 @@ class FilesPage(Page):
    def __init__(self, *args, **kwargs):
        Page.__init__(self, *args, **kwargs)
        self.arr = []
-       self.frame_left = CTkFrame(master=self,width=300, corner_radius=0)
+       self.frame_left = CTkFrame(master=self,width=2000, corner_radius=0)
        self.frame_left.grid(row=0, column=0, sticky="nswe")
-       self.frame_right = CTkFrame(master=self, width=420, height=2000-40, corner_radius=12)
+       self.frame_right = CTkFrame(master=self, width=400, height=2000-40, corner_radius=12)
        self.frame_right.grid(row=0, column=1, sticky="nswe", padx=20, pady=20)
-       button_instuctions = CTkButton(self.frame_left, text="Delete", text_font=("Roboto Medium", -40), command=self.mark_checkbox, fg_color=None, hover = True, border_width=2)
+       self.update_files()
+       button_instuctions = CTkButton(self.frame_right,text="Delete", text_font=("Roboto Medium", -40), command=self.mark_checkbox, fg_color=None, hover = True, border_width=2)
        button_instuctions.pack(side = "top")
-       button_instuctions = CTkButton(self.frame_left, text="Export", text_font=("Roboto Medium", -40), command=self.mark_checkbox, fg_color=None, hover = True, border_width=2)
+       button_instuctions = CTkButton(self.frame_right, text="Export", text_font=("Roboto Medium", -40), command=self.mark_checkbox, fg_color=None, hover = True, border_width=2)
        button_instuctions.pack(side = "top")
+       self.update_files()
        
-   def update_files(self):
-       filenames = next(os.walk("Data/"))[2]
-       for i in range(len(filenames)):
-           self.arr.append('check_box' + str(i))
-       for i in range(len(filenames)):
-           self.arr[i] = CTkCheckBox(self.frame_left, text=filenames[i], text_font=("Roboto Medium", -40))
-           self.arr[i].pack(side = "top")
-        
    def mark_checkbox(self):
        delete_files = []
-       for i in range(len(self.arr)):
+       for i in range(0, len(self.arr)-1):
            if (self.arr[i]).check_state == True:
-               delete_files.append(self.arr[i].text)
                print(self.arr[i].text)
-       for i in delete_files:
-           if i in self.arr:
-               os.delete("Data/"+ i)
-       self.update_files()
-
+               os.remove(os.path.join('Data/',self.arr[i].text))
+               print("Deleted")
+       #self.update_files()
+       
+   def update_files(self):
+       self.frame_left.destroy()
+       self.frame_left = CTkFrame(master=self,width=200, corner_radius=0)
+       self.frame_left.grid(row=0, column=0, sticky="nswe")
+       filenames = next(os.walk("Data/"))[2]
+       # for i in range(len(filenames)):
+           # self.arr.append('check_box' + str(i))
+       for i in range(0, len(filenames)-1):
+           self.arr.append(i)
+           self.arr[i] = CTkCheckBox(self.frame_left, text=filenames[i], text_font=("Roboto Medium", -40))
+           self.arr[i].pack(side = "top", padx = 70)
+        
 
 class MainView(CTkFrame):
     def __init__(self, *args, **kwargs):
@@ -112,6 +116,17 @@ class MainView(CTkFrame):
 
 def button_event():
     print("Button pressed")
+    
+
+# if __name__ == "__main__":
+    # root = CTk()
+    # main = MainView(root)
+    # main.pack(side="top", fill="both", expand=True)
+    # root.title("VitalAid")
+    # root.geometry(str(root.winfo_screenwidth()) + "x" + str(root.winfo_screenheight()))
+    # root.mainloop()
+    # app = App()
+    # app.start()
 
 # if __name__ == "__main__":
 #     root = CTkToplevel()
