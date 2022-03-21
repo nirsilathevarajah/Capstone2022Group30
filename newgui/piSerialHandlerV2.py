@@ -54,6 +54,20 @@ def setStartMeasuring(val):
 		setStartMeasuring(False)
 	else:
 		print('startMeasuringTrigger not enabled')
+
+def recalibrateSensors():
+        print('Telling the Arduino to recalibrate...')
+	ser.write(b'1')
+
+	# read to get the acknowledgement from the Arduino
+	while True:
+		ack = ser.read()
+		if ack == b'A':
+			break
+		else:
+			msg = ser.readline()
+			print(msg)
+	print('Arduino sent back %s' % ack)
 	
 # getter and setter functions for sensor values
 def getSensorValues():
@@ -76,41 +90,3 @@ def setSensorValues(temp, hr, sys, dia):
 	heartRate = hr
 	systolic = sys
 	diastolic = dia
-
-# while True:
-	# if count == 1:
-		# setStartMeasuring(True)
-	
-	# count+=1
-	
-	# startMeasuringTrigger = getStartMeasuring()
-	
-	# if(startMeasuring):
-		# print('Telling the Arduino to start measuring...')
-		# ser.write(b'0')
-
-		# # read to get the acknowledgement from the Arduino
-		# while True:
-			# ack = ser.read()
-			# if ack == b'A':
-				# break
-			# else:
-				# msg = ser.readline()
-				# print(msg)
-		# print('Arduino sent back %s' % ack)
-		# setStartMeasuring(False)
-	# else:
-		# print('startMeasuringTrigger not enabled')
-
-	# # read to check if arduino is sending sensor data
-	# serRx = ser.read()
-	# if serRx == b'T':
-		# sensorRead = ser.readline().decode('ascii').rstrip().split(',')
-		# setSensorValues(sensorRead[0], sensorRead[1], sensorRead[2], sensorRead[3])
-		# sensorValues = getSensorValues()
-		# print(sensorValues)
-	# else:
-		# print("no sensor values received")
-		
-
-	
