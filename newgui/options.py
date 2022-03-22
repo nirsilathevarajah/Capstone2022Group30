@@ -30,25 +30,55 @@ class FilesPage(Page):
        self.frame_top.grid(row=0, column=0, sticky="nswe")
        self.frame_bottom= CTkFrame(master=self, width=400, corner_radius=12)
        self.frame_bottom.grid(row=0, column=1, sticky="nswe", padx=20, pady=20)
-       self.update_files()
-       button_instuctions = CTkButton(self.frame_bottom,text="Delete", text_font=("Roboto Medium", -40), command=self.mark_checkbox, fg_color=None, hover = True, border_width=2)
+       #self.update_files()
+       button_instuctions = CTkButton(self.frame_bottom,text="Delete", text_font=("Roboto Medium", -40), command=self.delete_files, fg_color=None, hover = True, border_width=2)
        button_instuctions.pack(side = "top")
-       button_instuctions = CTkButton(self.frame_bottom, text="Export", text_font=("Roboto Medium", -40), command=self.mark_checkbox, fg_color=None, hover = True, border_width=2)
+       button_instuctions = CTkButton(self.frame_bottom, text="Export", text_font=("Roboto Medium", -40), command=self.delete_files, fg_color=None, hover = True, border_width=2)
        button_instuctions.pack(side = "top")
        self.update_files()
        
-
-
+   
    def mark_checkbox(self):
-       for i in range(len(self.arr)):
-           if (self.arr[i]).check_state == True:
-               print(self.arr[i].text)
-               os.remove(os.path.join('Data/',self.arr[i].text))
-               self.arr.remove(self.arr[i])
-               print("Deleted")
-               self.update_files()
+       checked_files = []
+       print(len(self.arr))
+       for i in self.arr:
+           print(i.check_state)
+           if i.check_state:
+               print(i.text)
+               checked_files.append(i.text)
+               #os.remove(os.path.join('Data/',self.arr[i].text))
+               #self.arr.remove(self.arr[i])
+               print("Selected: " + i.text)
+               #self.update_files()
            else:
+                print("Not Working")
                 continue
+       print("done")
+       return checked_files
+        
+   def delete_files(self):
+        checked_files = self.mark_checkbox()
+        #path = os.getcwd()
+        path = '/home/pi/Desktop/Capstone2022Group30/newgui'
+        for f in checked_files:
+                try:
+                        filename = "Data/" + f 
+                        source_path = os.path.join(path, filename) 
+                        source_path.remove()
+                        print("Success - " + source_path + " removed") 
+                except:
+                        print("No file named " + source_path)
+        self.remove_files()
+
+   def remove_files(self):
+           delete_files = self.mark_checkbox()
+           for f in self.arr:
+                   if f.text in delete_files:
+                           self.arr.remove(f)
+           self.update_files()
+
+           
+        
        
    def update_files(self):
        self.frame_top.destroy()
