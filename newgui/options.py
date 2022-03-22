@@ -33,48 +33,62 @@ class FilesPage(Page):
        #self.update_files()
        button_instuctions = CTkButton(self.frame_bottom,text="Delete", text_font=("Roboto Medium", -40), command=self.delete_files, fg_color=None, hover = True, border_width=2)
        button_instuctions.pack(side = "top")
-       button_instuctions = CTkButton(self.frame_bottom, text="Export", text_font=("Roboto Medium", -40), command=self.delete_files, fg_color=None, hover = True, border_width=2)
+       button_instuctions = CTkButton(self.frame_bottom, text="Export", text_font=("Roboto Medium", -40), command=self.export_files, fg_color=None, hover = True, border_width=2)
        button_instuctions.pack(side = "top")
        self.update_files()
        
    
    def mark_checkbox(self):
        checked_files = []
-       print(len(self.arr))
+       print("Length of self.arr" + str(len(self.arr)))
        for i in self.arr:
-           print(i.check_state)
+           print(i.text)
+           print("Check state: " + str(i.check_state))
            if i.check_state:
-               print(i.text)
+               #print(i.text)
                checked_files.append(i.text)
                #os.remove(os.path.join('Data/',self.arr[i].text))
                #self.arr.remove(self.arr[i])
                print("Selected: " + i.text)
                #self.update_files()
            else:
-                print("Not Working")
+                print("Reached else")
                 continue
        print("done")
        return checked_files
         
    def delete_files(self):
         checked_files = self.mark_checkbox()
-        #path = os.getcwd()
-        path = '/home/pi/Desktop/Capstone2022Group30/newgui'
+        path = os.getcwd()
+        #path = '/home/pi/Desktop/Capstone2022Group30/newgui'
         for f in checked_files:
                 try:
                         filename = "Data/" + f 
-                        source_path = os.path.join(path, filename) 
-                        source_path.remove()
+                        source_path = os.path.join(path, filename)
+                        os.remove(source_path)
                         print("Success - " + source_path + " removed") 
                 except:
                         print("No file named " + source_path)
-        self.remove_files()
+        
+        print("Length of self arr " + str(len(self.arr)))
+        #self.remove_files(checked_files)
 
-   def remove_files(self):
-           delete_files = self.mark_checkbox()
+   def remove_files(self, checked_files):
+           print("Start Checked Files")
+           for d in checked_files:
+                   print(d)
+           print("End Checked Files")     
+           
+           
+           print("Inside self.arr" + str(len(self.arr)))
            for f in self.arr:
-                   if f.text in delete_files:
+                   #print(f.text)
+                   if f.text in checked_files:
+                           print(f.text + " removed from self.arr")
                            self.arr.remove(f)
+                           #len(self.arr)--
+                   else: continue
+           print("NEW SELF.ARR LENGTH: " + str(len(self.arr)))
            self.update_files()
 
            
@@ -117,31 +131,41 @@ class FilesPage(Page):
         # self.refresh()
         
 
-   # def export_files(self):
-        # #Get checked marked files
-        # files = self.checked_boxes() 
+   def export_files(self):
+        #Get checked marked files
+        files = self.mark_checkbox() 
         
-        # #Check for inserted USB
-        # if usb_detected() == False:
-            # return
-        # else: 
-        # #Set up paths
-            # dest_usb = get_USB_name()
-            # path = os.getcwd()
-            # folder = "VitalAidExport"
-            # dest_path = os.path.join(dest_usb, folder)
-            # try:
-                # os.mkdir(dest_path)
-            # except: 
-                # return#Loops through + copies files in source folder
-            # for f in files: 
-                # try:
-                    # filename = "Data/" + f 
-                    # source_path = os.path.join(path, filename) 
-                    # x = shutil.copy(source_path, dest_path) 
-                    # print("Success - " + x) 
-                # except: 
-                    # print("No file named " + filename)  
+        #Check for inserted USB
+        if usb_detected() == False:
+            return
+        else: 
+        #Set up paths
+            dest_usb = get_USB_name()
+            path = os.getcwd()
+            folder = "VitalAidExport"
+            
+            
+            CHECK_FOLDER = os.path.isdir(folder)
+            
+            if not CHECK_FOLDER:
+                    os.mkdir(folder)
+                    print("Folder created")
+            else:
+                    print("folder already exists")
+            
+            
+            dest_path = os.path.join(dest_usb, folder)
+            
+            
+            #Loops through + copies files in source folder
+            for f in files: 
+                try:
+                    filename = "Data/" + f 
+                    source_path = os.path.join(path, filename) 
+                    x = shutil.copy(source_path, dest_path) 
+                    print("Success - " + x) 
+                except: 
+                    print("No file named " + filename)  
         
    # def refresh(self):
            # self.__init__()
