@@ -4,7 +4,7 @@ import tkinter.messagebox
 import customtkinter
 import sys
 import vitalsPage
-import piSerialHandlerV2
+#import piSerialHandlerV2
 
 class App(customtkinter.CTk):
 
@@ -56,7 +56,7 @@ class App(customtkinter.CTk):
         frame1.pack()
         label5 = customtkinter.CTkLabel(frame1, text= "CALIBRATING, PLEASE WAIT")
         label5.grid(row=1, column=0, pady=10, padx=20)
-        piSerialHandlerV2.setStartMeasuring(True)
+        #piSerialHandlerV2.setStartMeasuring(True)
         toplevel.destroy()
         self.on_closing()
         app= vitalsPage.Vitals()

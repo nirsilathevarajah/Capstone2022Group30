@@ -26,37 +26,97 @@ class FilesPage(Page):
    def __init__(self, *args, **kwargs):
        Page.__init__(self, *args, **kwargs)
        self.arr = []
-       self.frame_left = CTkFrame(master=self,width=2000, corner_radius=0)
-       self.frame_left.grid(row=0, column=0, sticky="nswe")
-       self.frame_right = CTkFrame(master=self, width=400, height=2000-40, corner_radius=12)
-       self.frame_right.grid(row=0, column=1, sticky="nswe", padx=20, pady=20)
+       self.frame_top = CTkFrame(master=self ,corner_radius=0)
+       self.frame_top.grid(row=0, column=0, sticky="nswe")
+       self.frame_bottom= CTkFrame(master=self, width=400, corner_radius=12)
+       self.frame_bottom.grid(row=0, column=1, sticky="nswe", padx=20, pady=20)
        self.update_files()
-       button_instuctions = CTkButton(self.frame_right,text="Delete", text_font=("Roboto Medium", -40), command=self.mark_checkbox, fg_color=None, hover = True, border_width=2)
+       button_instuctions = CTkButton(self.frame_bottom,text="Delete", text_font=("Roboto Medium", -40), command=self.mark_checkbox, fg_color=None, hover = True, border_width=2)
        button_instuctions.pack(side = "top")
-       button_instuctions = CTkButton(self.frame_right, text="Export", text_font=("Roboto Medium", -40), command=self.mark_checkbox, fg_color=None, hover = True, border_width=2)
+       button_instuctions = CTkButton(self.frame_bottom, text="Export", text_font=("Roboto Medium", -40), command=self.mark_checkbox, fg_color=None, hover = True, border_width=2)
        button_instuctions.pack(side = "top")
        self.update_files()
        
+
+
    def mark_checkbox(self):
-       delete_files = []
-       for i in range(0, len(self.arr)-1):
+       for i in range(len(self.arr)):
            if (self.arr[i]).check_state == True:
                print(self.arr[i].text)
                os.remove(os.path.join('Data/',self.arr[i].text))
+               self.arr.remove(self.arr[i])
                print("Deleted")
-       #self.update_files()
+               self.update_files()
+           else:
+                continue
        
    def update_files(self):
-       self.frame_left.destroy()
-       self.frame_left = CTkFrame(master=self,width=200, corner_radius=0)
-       self.frame_left.grid(row=0, column=0, sticky="nswe")
+       self.frame_top.destroy()
+       self.frame_top = CTkFrame(master=self,width=200, corner_radius=0)
+       self.frame_top.grid(row=0, column=0, sticky="nswe")
        filenames = next(os.walk("Data/"))[2]
        # for i in range(len(filenames)):
            # self.arr.append('check_box' + str(i))
-       for i in range(0, len(filenames)-1):
+       for i in range(len(filenames)):
            self.arr.append(i)
-           self.arr[i] = CTkCheckBox(self.frame_left, text=filenames[i], text_font=("Roboto Medium", -40))
-           self.arr[i].pack(side = "top", padx = 70)
+           self.arr[i] = CTkCheckBox(self.frame_top, text=filenames[i], text_font=("Roboto Medium", -40))
+           self.arr[i].pack(side = "top", padx = 90)
+       
+   # def checked_boxes(self):
+        # checked_files = []
+        # for i in range(0, len(self.arr)-1):
+           # if (self.arr[i]).check_state == True:
+               # print(self.arr[i].text)
+               # checked_files.append(self.arr[i])
+           # else:
+                # break
+        # return checked_files
+
+   # def delete_files(self):
+        # files = self.checked_boxes()
+        # path = os.getcwd()
+        # #Deletes files in source folder
+        # for f in files: 
+                # try:
+                        # filename = "Data/" + f 
+                        # source_path = os.path.join(path, filename) 
+                        # source_path.remove()
+                        # print("Success - " + source_path + " removed") 
+                # except:
+                        # print("No file named " + filename)
+        # self.refresh()
+        
+
+   # def export_files(self):
+        # #Get checked marked files
+        # files = self.checked_boxes() 
+        
+        # #Check for inserted USB
+        # if usb_detected() == False:
+            # return
+        # else: 
+        # #Set up paths
+            # dest_usb = get_USB_name()
+            # path = os.getcwd()
+            # folder = "VitalAidExport"
+            # dest_path = os.path.join(dest_usb, folder)
+            # try:
+                # os.mkdir(dest_path)
+            # except: 
+                # return#Loops through + copies files in source folder
+            # for f in files: 
+                # try:
+                    # filename = "Data/" + f 
+                    # source_path = os.path.join(path, filename) 
+                    # x = shutil.copy(source_path, dest_path) 
+                    # print("Success - " + x) 
+                # except: 
+                    # print("No file named " + filename)  
+        
+   # def refresh(self):
+           # self.__init__()
+                
+
         
 
 class MainView(CTkFrame):
@@ -113,6 +173,20 @@ class MainView(CTkFrame):
         # b3.pack(side="left")
 
         p1.show()
+        
+def usb_detected():
+        usb_path = "/media/pi/"
+        pi_detected = len(os.listdir(usb_path))
+        if pi_detected < 1: return False        
+        else: return True
+       
+def get_USB_name():
+        usb_path = "/media/pi/" 
+        usb_dir = os.listdir(usb_path)
+        #Gets only the first 
+        for usb_file in usb_dir:
+            destPath = os.path.join(usb_path, usb_file)  
+            return destPath
 
 def button_event():
     print("Button pressed")

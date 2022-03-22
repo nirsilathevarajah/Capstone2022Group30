@@ -9,7 +9,7 @@ import csv
 import os
 import datetime
 import options
-import piSerialHandlerV2
+#import piSerialHandlerV2
 
 class ServoDrive(object):
     # simulate values
@@ -202,15 +202,15 @@ class Vitals(customtkinter.CTk):
 
 
     def getVitals(self):
-        # bodyTemp = self.bodyTempVal = self.servo.getBodyTemp()
-        # bloodPresDias = self.bloodPresDiasVal = self.servo.getBloodPresDias()
-        # bloodPresSys = self.bloodPresSysVal = self.servo.getBloodPresSys()
-        # heartRate = self.heartRateVal = self.servo.getBodyTemp()
+        bodyTemp = self.bodyTempVal = self.servo.getBodyTemp()
+        bloodPresDias = self.bloodPresDiasVal = self.servo.getBloodPresDias()
+        bloodPresSys = self.bloodPresSysVal = self.servo.getBloodPresSys()
+        heartRate = self.heartRateVal = self.servo.getBodyTemp()
 
-        bodyTemp = self.bodyTempVal = getSensorVitals()[0]
-        bloodPresDias = self.bloodPresDiasVal = getSensorVitals()[1]
-        bloodPresSys = self.bloodPresSysVal = getSensorVitals()[2]
-        heartRate = self.heartRateVal = getSensorVitals()[3]
+        # bodyTemp = self.bodyTempVal = getSensorVitals()[0]
+        # bloodPresDias = self.bloodPresDiasVal = getSensorVitals()[1]
+        # bloodPresSys = self.bloodPresSysVal = getSensorVitals()[2]
+        # heartRate = self.heartRateVal = getSensorVitals()[3]
         file_name = 'Data/patient_'+ str(self.start_time) +'.csv'
         now = datetime.datetime.now()
         dt_string = now.strftime("%d/%m/%Y, %H:%M:%S, ")
