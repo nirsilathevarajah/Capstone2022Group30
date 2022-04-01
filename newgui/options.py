@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import tkinter as tk
-from turtle import screensize
 from customtkinter import *
 import os
 
@@ -26,21 +25,25 @@ class FilesPage(Page):
    def __init__(self, *args, **kwargs):
        Page.__init__(self, *args, **kwargs)
        self.arr = []
-       self.frame_top = CTkFrame(master=self ,corner_radius=0)
-       self.frame_top.grid(row=0, column=0, sticky="nswe")
-       self.frame_bottom= CTkFrame(master=self, width=400, corner_radius=12)
-       self.frame_bottom.grid(row=0, column=1, sticky="nswe", padx=20, pady=20)
-       #self.update_files()
-       button_instuctions = CTkButton(self.frame_bottom,text="Delete", text_font=("Roboto Medium", -40), command=self.delete_files, fg_color=None, hover = True, border_width=2)
-       button_instuctions.pack(side = "top")
-       button_instuctions = CTkButton(self.frame_bottom, text="Export", text_font=("Roboto Medium", -40), command=self.export_files, fg_color=None, hover = True, border_width=2)
-       button_instuctions.pack(side = "top")
+       self.frame_top = CTkFrame(master=self, width=1100, height=500, corner_radius=0)
+       self.frame_top.grid(column=0, row=0, sticky='w',  padx=20, pady=20)
+       self.frame_top.grid_propagate(0)
+
+       self.frame_bottom= CTkFrame(master=self, width=1100, height=170, corner_radius=12)
+       self.frame_bottom.grid(column=0, row=1, sticky='w', padx=20, pady=20)
+       self.frame_bottom.grid_propagate(0)
+
+       #buttons on the bottom frame
+       button_instuctions = CTkButton(self.frame_bottom,text="Delete", text_font=("Roboto Medium", -85), command=self.delete_files, fg_color=None, hover = True, border_width=2)
+       button_instuctions.grid(column=0, row=0, sticky='w',  padx=100, pady=40)
+       button_instuctions = CTkButton(self.frame_bottom, text="Export", text_font=("Roboto Medium", -85), command=self.export_files, fg_color=None, hover = True, border_width=2)
+       button_instuctions.grid(column=1, row=0, sticky='w',  padx=100, pady=40)
        self.update_files()
        
    
    def mark_checkbox(self):
        checked_files = []
-       print("Length of self.arr" + str(len(self.arr)))
+       print("Length of self.arr " + str(len(self.arr)))
        for i in self.arr:
            print(i.text)
            print("Check state: " + str(i.check_state))
@@ -69,68 +72,37 @@ class FilesPage(Page):
                         print("Success - " + source_path + " removed") 
                 except:
                         print("No file named " + source_path)
-        
         print("Length of self arr " + str(len(self.arr)))
-        #self.remove_files(checked_files)
+        self.remove_files(checked_files)
+        self.update_files()
 
    def remove_files(self, checked_files):
            print("Start Checked Files")
            for d in checked_files:
                    print(d)
            print("End Checked Files")     
-           
-           
            print("Inside self.arr" + str(len(self.arr)))
            for f in self.arr:
                    #print(f.text)
                    if f.text in checked_files:
                            print(f.text + " removed from self.arr")
                            self.arr.remove(f)
-                           #len(self.arr)--
+                           len(self.arr)
                    else: continue
            print("NEW SELF.ARR LENGTH: " + str(len(self.arr)))
-           self.update_files()
-
-           
-        
+           #self.update_files()
        
    def update_files(self):
-       self.frame_top.destroy()
-       self.frame_top = CTkFrame(master=self,width=200, corner_radius=0)
-       self.frame_top.grid(row=0, column=0, sticky="nswe")
+       print("Updating Files")
+       canvas = tk.Canvas(self.frame_top, bg="gray22", border_color=None)
+       canvas.grid(row=0, column=0, sticky="news")
        filenames = next(os.walk("Data/"))[2]
-       # for i in range(len(filenames)):
-           # self.arr.append('check_box' + str(i))
+       self.arr = []
        for i in range(len(filenames)):
            self.arr.append(i)
-           self.arr[i] = CTkCheckBox(self.frame_top, text=filenames[i], text_font=("Roboto Medium", -40))
-           self.arr[i].pack(side = "top", padx = 90)
+           self.arr[i] = CTkCheckBox(canvas, text=filenames[i], text_font=("Roboto Medium", -60), width=44, height=44)
+           self.arr[i].pack(side = "top")
        
-   # def checked_boxes(self):
-        # checked_files = []
-        # for i in range(0, len(self.arr)-1):
-           # if (self.arr[i]).check_state == True:
-               # print(self.arr[i].text)
-               # checked_files.append(self.arr[i])
-           # else:
-                # break
-        # return checked_files
-
-   # def delete_files(self):
-        # files = self.checked_boxes()
-        # path = os.getcwd()
-        # #Deletes files in source folder
-        # for f in files: 
-                # try:
-                        # filename = "Data/" + f 
-                        # source_path = os.path.join(path, filename) 
-                        # source_path.remove()
-                        # print("Success - " + source_path + " removed") 
-                # except:
-                        # print("No file named " + filename)
-        # self.refresh()
-        
-
    def export_files(self):
         #Get checked marked files
         files = self.mark_checkbox() 
@@ -197,17 +169,20 @@ class MainView(CTkFrame):
         p2 = RecalibratePage(self)
         p3 = FilesPage(self)
 
-        label_1 = CTkLabel(master=frame_left, text="OPTIONS", text_font=("Roboto Medium", -50), fg_color=None)
-        label_1.grid(row=1, column=0, pady=100, padx=10)
+        label_1 = CTkLabel(master=frame_left, text="OPTIONS", text_font=("Roboto Medium", -60), fg_color=None)
+        label_1.grid(row=0, column=0, pady=10, padx=10)
 
-        button_instuctions = CTkButton(master=frame_left, text="Instructions", text_font=("Roboto Medium", -40), command=p1.show, fg_color=None, hover = True,border_width=2)
-        button_instuctions.grid(row=2, column=0, pady=10, padx=20)
+        button_instuctions = CTkButton(master=frame_left, text="Instructions", text_font=("Roboto Medium", -70), height = 150, command=p1.show, fg_color=None, hover = True,border_width=2)
+        button_instuctions.grid(row=1, column=0, pady=10, padx=20)
 
-        button_files = CTkButton(master=frame_left, text="Files", text_font=("Roboto Medium", -40), command=p3.show, fg_color=None, border_width=2)
-        button_files.grid(row=3, column=0, pady=10, padx=20)
+        button_files = CTkButton(master=frame_left, text="      Files      ", text_font=("Roboto Medium", -70), height = 150, command=p3.show, fg_color=None, border_width=2)
+        button_files.grid(row=2, column=0, pady=10, padx=20)
 
-        button_recalibrate = CTkButton(master=frame_left, text="Recalibrate", text_font=("Roboto Medium", -40), command=p2.show, fg_color=None, border_width=2)
-        button_recalibrate.grid(row=4, column=0, pady=10, padx=20)
+        button_recalibrate = CTkButton(master=frame_left, text="Recalibrate", text_font=("Roboto Medium", -70), height = 150, command=p2.show, fg_color=None, border_width=2)
+        button_recalibrate.grid(row=3, column=0, pady=10, padx=20)
+
+        button_close = CTkButton(master=frame_left, text="     Close     ", text_font=("Roboto Medium", -70), height = 150, command=p2.show, fg_color=None, border_width=2)
+        button_close.grid(row=4, column=0, pady=10, padx=20)
 
         # buttonframe = tk.Frame(self)
         # container = tk.Frame(self)

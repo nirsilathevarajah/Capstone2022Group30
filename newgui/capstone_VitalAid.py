@@ -42,10 +42,10 @@ class App(customtkinter.CTk):
                                                     "4. Press 'MEASURE' to begin.\n",
                                               text_font=("Roboto Medium", -55),  # font name and size in px
                                               fg_color=None)
-        self.label_1.place(relx=0.5, rely=0.1, anchor=tkinter.N)
+        self.label_1.place(relx=0.5, rely=0.02, anchor=tkinter.N)
 
-        self.button_5 = customtkinter.CTkButton(master=self.frame_right, width=340, height=150, text="MEASURE", text_font=("Roboto Medium", -60), command=self.button_event)
-        self.button_5.place(relx=0.5, rely=0.75, anchor=tkinter.N)
+        self.button_5 = customtkinter.CTkButton(master=self.frame_right, width=420, height=200, text="MEASURE", text_font=("Roboto Medium", -200), command=self.button_event)
+        self.button_5.place(relx=0.5, rely=0.65, anchor=tkinter.N)
 
     def button_event(self):
         print("Button pressed")

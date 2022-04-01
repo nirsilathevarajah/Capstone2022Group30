@@ -13,15 +13,23 @@ import options
 
 class ServoDrive(object):
     # simulate values
-    def getBodyTemp(self): 
-        return random.randint(25,50)
-    def getBloodPresDias(self): 
-        return random.randint(0,250)
-    def getBloodPresSys(self): 
-        return random.randint(0,200)
-    def getHeartRate(self): 
-        return random.randint(0,200)
+    # def getBodyTemp(self): 
+    #     return random.randint(31,39)
+    # def getBloodPresDias(self): 
+    #     return random.randint(60,95)
+    # def getBloodPresSys(self): 
+    #     return random.randint(100,130)
+    # def getHeartRate(self): 
+    #     return random.randint(60,100)
 
+    def getBodyTemp(self): 
+        return random.randint(0,39)
+    def getBloodPresDias(self): 
+        return random.randint(0,95)
+    def getBloodPresSys(self): 
+        return random.randint(0,130)
+    def getHeartRate(self): 
+        return random.randint(0,100)
 class Vitals(customtkinter.CTk):
 
     root = tkinter.Tk()
@@ -61,7 +69,7 @@ class Vitals(customtkinter.CTk):
 
         # ============ frame_left ============
 
-        self.button_1 = customtkinter.CTkButton(master=self.frame_left, text="OPTIONS", command=self.button_options, fg_color=None, width=Vitals.WIDTH/6, height=(Vitals.HEIGHT/2)-75, border_width=2)
+        self.button_1 = customtkinter.CTkButton(master=self.frame_left, text="OPTIONS", text_font=("Roboto Medium", -55), command=self.button_options, fg_color=None, width=Vitals.WIDTH/6, height=(Vitals.HEIGHT/2)-75, border_width=2)
         self.button_1.grid(row=1, column=0, pady=10, padx=20)
 
         self.create_start_button()
@@ -78,29 +86,29 @@ class Vitals(customtkinter.CTk):
 
         title_width = Vitals.WIDTH/4
         title_height = Vitals.HEIGHT/10
-        label_width = Vitals.WIDTH/4
+        label_width = Vitals.WIDTH/2.5
         label_height = Vitals.HEIGHT/8
         self.canvas_height = Vitals.WIDTH/6
         self.canvas_width = Vitals.HEIGHT/1.5
 
         self.servo = ServoDrive()
-        self.label_info_bt = customtkinter.CTkLabel(master=self.frame_info, width = title_width, height= title_height, text="Body Temperature", text_font=("Roboto Medium", -30), corner_radius=0, fg_color=("white", "gray38"))
-        self.label_info_bt.grid(padx=5)
+        self.label_info_bt = customtkinter.CTkLabel(master=self.frame_info, width = title_width, height= title_height, text="Body Temperature", text_font=("Roboto Medium", -50), corner_radius=0, fg_color=("white", "gray38"))
+        self.label_info_bt.grid(padx=0, pady=0)
 
         degree_sign = u"\N{DEGREE SIGN}" 
-        self.label_info_bt_val = customtkinter.CTkLabel(master=self.frame_info, width = label_width, height= label_height, text=' ', text_font=("Roboto Medium", -120), corner_radius=0, fg_color=("white", "gray48"))
+        self.label_info_bt_val = customtkinter.CTkLabel(master=self.frame_info, width = label_width, height= label_height, text='     ', text_font=("Roboto Medium", -130), corner_radius=0, fg_color=("white", "gray48"))
         self.label_info_bt_val.grid(padx=5, pady=6)
 
-        self.label_info_bp = customtkinter.CTkLabel(master=self.frame_info, width = title_width, height= title_height, text="Blood Pressure", text_font=("Roboto Medium", -30), corner_radius=0, fg_color=("white", "gray38"))
+        self.label_info_bp = customtkinter.CTkLabel(master=self.frame_info, width = title_width, height= title_height, text="Blood Pressure  (mm Hg)", text_font=("Roboto Medium", -50), corner_radius=0, fg_color=("white", "gray38"))
         self.label_info_bp.grid(padx=5)
 
-        self.label_info_bp_val = customtkinter.CTkLabel(master=self.frame_info, width = label_width, height= label_height, text=' ', text_font=("Roboto Medium", -120), corner_radius=0, fg_color=("white", "gray48"))
+        self.label_info_bp_val = customtkinter.CTkLabel(master=self.frame_info, width = label_width, height= label_height, text='    ', text_font=("Roboto Medium", -130), corner_radius=0, fg_color=("white", "gray48"))
         self.label_info_bp_val.grid(padx=5, pady=6)
 
-        self.label_info_hr = customtkinter.CTkLabel(master=self.frame_info, width = title_width, height= title_height, text="Heart Rate", text_font=("Roboto Medium", -30), corner_radius=0, fg_color=("white", "gray38"))
+        self.label_info_hr = customtkinter.CTkLabel(master=self.frame_info, width = title_width, height= title_height, text="Heart Rate  (bpm)", text_font=("Roboto Medium", -50), corner_radius=0, fg_color=("white", "gray38"))
         self.label_info_hr.grid(padx=5)
 
-        self.label_info_hr_val = customtkinter.CTkLabel(master=self.frame_info,width = label_width, height= label_height,  text=' ', text_font=("Roboto Medium", -120), corner_radius=0, fg_color=("white", "gray48"))
+        self.label_info_hr_val = customtkinter.CTkLabel(master=self.frame_info,width = label_width, height= label_height,  text='    ', text_font=("Roboto Medium", -130), corner_radius=0, fg_color=("white", "gray48"))
         self.label_info_hr_val.grid(padx=5, pady=6)
 
         self.create_bt_canvas()
@@ -119,25 +127,25 @@ class Vitals(customtkinter.CTk):
     def create_bt_canvas(self):
         self.canvas_bt = tkinter.Canvas(master = self.frame_info_2, width=self.canvas_width, height=self.canvas_height, background='black')
         self.canvas_bt.grid(pady=5, padx=5)
-        self.bt_line = self.canvas_bt.create_line(0,0,0,0, fill="purple")
-        self.bt_high_line = self.canvas_bt.create_line(0,0,0,0, fill="red")
-        self.bt_low_line = self.canvas_bt.create_line(0,0,0,0, fill="red")
+        self.bt_line = self.canvas_bt.create_line(0,self.norm(36, 30, 42),0,self.norm(36, 30, 42), fill="#99ff99", width =5)
+        self.bt_high_line = self.canvas_bt.create_line(0,self.norm(40, 30, 42),0,self.norm(40, 30, 42), fill="red", width=2)
+        self.bt_low_line = self.canvas_bt.create_line(0,self.norm(32, 30, 42),0,self.norm(32, 30, 42), fill="red", width= 2)
 
     def create_bp_canvas(self):
         self.canvas_bp = tkinter.Canvas(master = self.frame_info_2, width=self.canvas_width, height=self.canvas_height, background='black')
         self.canvas_bp.grid(pady=5, padx=5)
-        self.bp_dias_line = self.canvas_bp.create_line(0,0,0,0, fill="green")
-        self.bp_sys_line = self.canvas_bp.create_line(0,0,0,0, fill="orange")
-        self.bp_high_line = self.canvas_bp.create_line(0,0,0,0, fill="red")
-        self.bp_low_line = self.canvas_bp.create_line(0,0,0,0, fill="red")
+        self.bp_dias_line = self.canvas_bp.create_line(0,self.norm(80, 40, 160),0,self.norm(80, 40, 160), fill="#ff9933", width=5)
+        self.bp_sys_line = self.canvas_bp.create_line(0,self.norm(120, 40, 160),0,self.norm(120, 40, 160), fill="purple", width=5)
+        self.bp_high_line = self.canvas_bp.create_line(0,self.norm(140, 40, 160),0,self.norm(140, 40, 160), fill="red", width=2)
+        self.bp_low_line = self.canvas_bp.create_line(0,self.norm(60, 40, 160),0,self.norm(60, 40, 160), fill="red", width=2 )
     
 
     def create_hr_canvas(self):
         self.canvas_hr = tkinter.Canvas(master = self.frame_info_2, width=self.canvas_width, height=self.canvas_height, background='black')
         self.canvas_hr.grid(pady=5, padx=5)
-        self.hr_line = self.canvas_hr.create_line(0,0,0,0, fill="blue")
-        self.hr_high_line = self.canvas_hr.create_line(0,0,0,0, fill="red")
-        self.hr_low_line = self.canvas_hr.create_line(0,0,0,0, fill="red")
+        self.hr_line = self.canvas_hr.create_line(0,self.norm(75, 40, 110),0,self.norm(75, 40, 110), fill="#4da6ff", width= 5)
+        self.hr_high_line = self.canvas_hr.create_line(0,self.norm(100, 40, 110),0,self.norm(100, 40, 110), fill="red", width=2)
+        self.hr_low_line = self.canvas_hr.create_line(0,self.norm(50, 40, 110),0,self.norm(50, 40, 110), fill="red", width=2)
 
     def check_status(self):
         if self.paused == False:
@@ -155,15 +163,17 @@ class Vitals(customtkinter.CTk):
 
     def start_button1(self):
         self.toplevel = CTkToplevel()
-        center_window(self.toplevel, 300, 150)
+        center_window(self.toplevel, 1100, 350)
         frame1 = customtkinter.CTkFrame(self.toplevel)
         frame1.pack()
+        #self.button_1.set_state(tkinter.DISABLED)
+        #self.button_options.set_state(tkinter.DISABLED)
         label5 = customtkinter.CTkLabel(frame1, text= "Would you like to continue" +
-                                                        "or start again?")
+                                                        " or start again?", text_font=("Roboto Medium", -60))
         label5.grid(row=1, column=0, pady=10, padx=20)
-        self.button5 = customtkinter.CTkButton(frame1, text="Start Again", command=self.startAgain_button, border_width=2)
+        self.button5 = customtkinter.CTkButton(frame1, text="Start Again", text_font=("Roboto Medium", -80), command=self.startAgain_button, border_width=2)
         self.button5.grid(row=3, column=0, pady=10, padx=20)
-        self.button6 = customtkinter.CTkButton(frame1, text="Continue", command=self.continue_button, border_width=2)
+        self.button6 = customtkinter.CTkButton(frame1, text="Continue", text_font=("Roboto Medium", -80), command=self.continue_button, border_width=2)
         self.button6.grid(row=4, column=0, pady=10, padx=20)
         self.button_2.destroy()
         self.create_stop_button()
@@ -184,19 +194,19 @@ class Vitals(customtkinter.CTk):
         self.update_vitals()
 
     def create_stop_button(self):
-        self.button_2 = customtkinter.CTkButton(master=self.frame_left, bg_color="red", text="STOP", command=self.stop_button, fg_color=None, width=Vitals.WIDTH/6, height=(Vitals.HEIGHT/2)-75, border_width=2)
+        self.button_2 = customtkinter.CTkButton(master=self.frame_left, bg_color="red", text="STOP", text_font=("Roboto Medium", -70), command=self.stop_button, fg_color=None, width=Vitals.WIDTH/6, height=(Vitals.HEIGHT/2)-75, border_width=2)
         self.button_2.grid(row=2, column=0, pady=10, padx=20)
         self.paused = False
 
     
     def create_start_button(self):
-        self.button_2 = customtkinter.CTkButton(master=self.frame_left, bg_color="green", text="START", command=self.start_button, fg_color=None, width=Vitals.WIDTH/6, height=(Vitals.HEIGHT/2)-75, border_width=2)
+        self.button_2 = customtkinter.CTkButton(master=self.frame_left, bg_color="green", text="START", text_font=("Roboto Medium", -70), command=self.start_button, fg_color=None, width=Vitals.WIDTH/6, height=(Vitals.HEIGHT/2)-75, border_width=2)
         self.button_2.grid(row=2, column=0, pady=10, padx=20)
         print(Vitals.WIDTH)
         self.paused = True
 
     def create_start_button1(self):
-        self.button_2 = customtkinter.CTkButton(master=self.frame_left, bg_color="green", text="START", command=self.start_button1, fg_color=None, width=Vitals.WIDTH/6, height=(Vitals.HEIGHT/2)-75, border_width=2)
+        self.button_2 = customtkinter.CTkButton(master=self.frame_left, bg_color="green", text="START", text_font=("Roboto Medium", -70), command=self.start_button1, fg_color=None, width=Vitals.WIDTH/6, height=(Vitals.HEIGHT/2)-75, border_width=2)
         self.button_2.grid(row=2, column=0, pady=10, padx=20)
         self.paused = True
 
@@ -205,7 +215,7 @@ class Vitals(customtkinter.CTk):
         bodyTemp = self.bodyTempVal = self.servo.getBodyTemp()
         bloodPresDias = self.bloodPresDiasVal = self.servo.getBloodPresDias()
         bloodPresSys = self.bloodPresSysVal = self.servo.getBloodPresSys()
-        heartRate = self.heartRateVal = self.servo.getBodyTemp()
+        heartRate = self.heartRateVal = self.servo.getHeartRate()
 
         # bodyTemp = self.bodyTempVal = getSensorVitals()[0]
         # bloodPresDias = self.bloodPresDiasVal = getSensorVitals()[1]
@@ -235,35 +245,42 @@ class Vitals(customtkinter.CTk):
         self.canvas_bt.xview_moveto(1.0)
         degree_sign = u"\N{DEGREE SIGN}" 
         self.label_info_bt_val.set_text(str(bodyTemp) + degree_sign + 'C')
+        self.label_info_bt_val.config(bg="gray52")
+        if bodyTemp > 40:
+            self.label_info_bt_val.config(bg="red")
+        elif bodyTemp < 32:
+            self.label_info_bt_val.config(bg="red")
+        elif bodyTemp>32 and bodyTemp>40:
+            self.label_info_bt_val.config(bg="gray62")
         if self.paused == False:
             self.after(1000, self.update_body_temp)
 
     def add_body_temp(self, line, y):
         coords = self.canvas_bt.coords(line)
-        x = coords[-2] + 5
+        x = coords[-2] + 16
         coords.append(x)
-        coords.append(self.norm(y, 0, 50))
-        coords = coords[-500:] # keep # of points to a manageable size
+        coords.append(self.norm(y, 30, 42))
+        coords = coords[-60:] # keep # of points to a manageable size
         self.canvas_bt.coords(line, *coords)
         self.canvas_bt.configure(scrollregion=self.canvas_bt.bbox("all"))
     
     def add_body_temp_high(self, line):
         y2 = 40
         coords = self.canvas_bt.coords(line)
-        x = coords[-2] + 5
+        x = coords[-2] + 16
         coords.append(x)
-        coords.append(self.norm(y2, 0, 50))
-        coords = coords[-500:] # keep # of points to a manageable size
+        coords.append(self.norm(y2, 30, 42))
+        coords = coords[-60:] # keep # of points to a manageable size
         self.canvas_bt.coords(line, *coords)
         self.canvas_bt.configure(scrollregion=self.canvas_bt.bbox("all"))
 
     def add_body_temp_low(self, line):
         y2 = 32 
         coords = self.canvas_bt.coords(line)
-        x = coords[-2] + 5
+        x = coords[-2] + 16
         coords.append(x)
-        coords.append(self.norm(y2, 0, 50))
-        coords = coords[-500:] # keep # of points to a manageable size
+        coords.append(self.norm(y2, 30, 42))
+        coords = coords[-60:] # keep # of points to a manageable size
         self.canvas_bt.coords(line, *coords)
         self.canvas_bt.configure(scrollregion=self.canvas_bt.bbox("all"))
 
@@ -278,44 +295,45 @@ class Vitals(customtkinter.CTk):
         self.add_blood_pres_low(self.bp_low_line)
         self.canvas_bp.xview_moveto(1.0)
         self.label_info_bp_val.set_text(str(bloodPresSys) + '/' + str(bloodPresDias))
+        self.label_info_bp_val.config(bg="red")
         if self.paused == False:
             self.after(1000, self.update_blood_pres)
 
     def add_blood_pres_dias(self, line, y):
         coords = self.canvas_bp.coords(line)
-        x = coords[-2] + 5
+        x = coords[-2] + 16
         coords.append(x)
-        coords.append(self.norm(y, 0, 180))
-        coords = coords[-500:] # keep # of points to a manageable size
+        coords.append(self.norm(y, 40, 160))
+        coords = coords[-60:] # keep # of points to a manageable size
         self.canvas_bp.coords(line, *coords)
         self.canvas_bp.configure(scrollregion=self.canvas_bp.bbox("all"))
     
     def add_blood_pres_sys(self, line, y):
         coords = self.canvas_bp.coords(line)
-        x = coords[-2] + 5
+        x = coords[-2] + 16
         coords.append(x)
-        coords.append(self.norm(y, 0, 180))
-        coords = coords[-500:] # keep # of points to a manageable size
+        coords.append(self.norm(y, 40, 160))
+        coords = coords[-60:] # keep # of points to a manageable size
         self.canvas_bp.coords(line, *coords)
         self.canvas_bp.configure(scrollregion=self.canvas_bp.bbox("all"))
 
     def add_blood_pres_low(self, line):
         y_low = 60
         coords = self.canvas_bp.coords(line)
-        x = coords[-2] + 5
+        x = coords[-2] + 16
         coords.append(x)
-        coords.append(self.norm(y_low, 0, 180))
-        coords = coords[-500:] # keep # of points to a manageable size
+        coords.append(self.norm(y_low, 40, 160))
+        coords = coords[-60:] # keep # of points to a manageable size
         self.canvas_bp.coords(line, *coords)
         self.canvas_bp.configure(scrollregion=self.canvas_bp.bbox("all"))
 
     def add_blood_pres_high(self, line):
         y_high = 140
         coords = self.canvas_bp.coords(line)
-        x = coords[-2] + 5
+        x = coords[-2] + 16
         coords.append(x)
-        coords.append(self.norm(y_high, 0, 180))
-        coords = coords[-500:] # keep # of points to a manageable size
+        coords.append(self.norm(y_high, 40, 160))
+        coords = coords[-60:] # keep # of points to a manageable size
         self.canvas_bp.coords(line, *coords)
         self.canvas_bp.configure(scrollregion=self.canvas_bp.bbox("all"))
 
@@ -332,30 +350,30 @@ class Vitals(customtkinter.CTk):
 
     def add_heart_rate(self, line, y):
         coords = self.canvas_hr.coords(line)
-        x = coords[-2] + 5
+        x = coords[-2] + 16
         coords.append(x)
-        coords.append(self.norm(y, 0, 200))
-        coords = coords[-500:] # keep # of points to a manageable size
+        coords.append(self.norm(y, 40, 110))
+        coords = coords[-60:] # keep # of points to a manageable size
         self.canvas_hr.coords(line, *coords)
         self.canvas_hr.configure(scrollregion=self.canvas_hr.bbox("all"))
     
     def add_heart_rate_low(self, line):
         y_low = 50
         coords = self.canvas_hr.coords(line)
-        x = coords[-2] + 5
+        x = coords[-2] + 16
         coords.append(x)
-        coords.append(self.norm(y_low, 0, 200))
-        coords = coords[-500:] # keep # of points to a manageable size
+        coords.append(self.norm(y_low, 40, 110))
+        coords = coords[-60:] # keep # of points to a manageable size
         self.canvas_hr.coords(line, *coords)
         self.canvas_hr.configure(scrollregion=self.canvas_hr.bbox("all"))
 
     def add_heart_rate_high(self, line):
         y_high = 100
         coords = self.canvas_hr.coords(line)
-        x = coords[-2] + 5
+        x = coords[-2] + 16
         coords.append(x)
-        coords.append(self.norm(y_high, 0, 200))
-        coords = coords[-500:] # keep # of points to a manageable size
+        coords.append(self.norm(y_high, 40, 110))
+        coords = coords[-60:] # keep # of points to a manageable size
         self.canvas_hr.coords(line, *coords)
         self.canvas_hr.configure(scrollregion=self.canvas_hr.bbox("all"))
 
@@ -374,7 +392,13 @@ class Vitals(customtkinter.CTk):
         return dt_string
         
     def norm(self, y, xmin, xmax):
+        if y < xmin:
+            y = xmin
+        elif y > xmax:
+            y = xmax
         norm_val = ((y - xmin)/(xmax - xmin))*(self.canvas_height)
+        #norm_val = (xmax-xmin)-(1-norm_val)
+        norm_val = (1-((y - xmin)/(xmax - xmin)))*(self.canvas_height)
         return norm_val
         
 def getSensorVitals():
