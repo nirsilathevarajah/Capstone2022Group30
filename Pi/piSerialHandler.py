@@ -1,7 +1,8 @@
+#!/usr/bin/python3
 import serial
 import time
 
-ser = serial.Serial("/dev/ttyACM1", 56700, timeout=1)
+ser = serial.Serial("/dev/ttyACM0", 56700, timeout=1)
 
 # Reset the Arduino's line. This is key to getting the write to work.
 # Without it, the first few writes don't work.

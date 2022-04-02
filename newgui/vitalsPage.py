@@ -9,27 +9,27 @@ import csv
 import os
 import datetime
 import options
-#import piSerialHandlerV2
+import piSerialHandlerV2
 
 class ServoDrive(object):
     # simulate values
-    # def getBodyTemp(self): 
-    #     return random.randint(31,39)
-    # def getBloodPresDias(self): 
-    #     return random.randint(60,95)
-    # def getBloodPresSys(self): 
-    #     return random.randint(100,130)
-    # def getHeartRate(self): 
-    #     return random.randint(60,100)
-
     def getBodyTemp(self): 
-        return random.randint(0,39)
+        return random.randint(31,39)
     def getBloodPresDias(self): 
-        return random.randint(0,95)
+        return random.randint(60,95)
     def getBloodPresSys(self): 
-        return random.randint(0,130)
+        return random.randint(100,130)
     def getHeartRate(self): 
-        return random.randint(0,100)
+        return random.randint(60,100)
+
+    # def getBodyTemp(self): 
+        # return random.randint(0,39)
+    # def getBloodPresDias(self): 
+        # return random.randint(0,95)
+    # def getBloodPresSys(self): 
+        # return random.randint(0,130)
+    # def getHeartRate(self): 
+        # return random.randint(0,100)
 class Vitals(customtkinter.CTk):
 
     root = tkinter.Tk()
@@ -212,15 +212,15 @@ class Vitals(customtkinter.CTk):
 
 
     def getVitals(self):
-        bodyTemp = self.bodyTempVal = self.servo.getBodyTemp()
-        bloodPresDias = self.bloodPresDiasVal = self.servo.getBloodPresDias()
-        bloodPresSys = self.bloodPresSysVal = self.servo.getBloodPresSys()
-        heartRate = self.heartRateVal = self.servo.getHeartRate()
+        # bodyTemp = self.bodyTempVal = self.servo.getBodyTemp()
+        # bloodPresDias = self.bloodPresDiasVal = self.servo.getBloodPresDias()
+        # bloodPresSys = self.bloodPresSysVal = self.servo.getBloodPresSys()
+        # heartRate = self.heartRateVal = self.servo.getHeartRate()
 
-        # bodyTemp = self.bodyTempVal = getSensorVitals()[0]
-        # bloodPresDias = self.bloodPresDiasVal = getSensorVitals()[1]
-        # bloodPresSys = self.bloodPresSysVal = getSensorVitals()[2]
-        # heartRate = self.heartRateVal = getSensorVitals()[3]
+        bodyTemp = self.bodyTempVal = getSensorVitals()[0]
+        bloodPresDias = self.bloodPresDiasVal = getSensorVitals()[1]
+        bloodPresSys = self.bloodPresSysVal = getSensorVitals()[2]
+        heartRate = self.heartRateVal = getSensorVitals()[3]
         file_name = 'Data/patient_'+ str(self.start_time) +'.csv'
         now = datetime.datetime.now()
         dt_string = now.strftime("%d/%m/%Y, %H:%M:%S, ")
@@ -245,15 +245,15 @@ class Vitals(customtkinter.CTk):
         self.canvas_bt.xview_moveto(1.0)
         degree_sign = u"\N{DEGREE SIGN}" 
         self.label_info_bt_val.set_text(str(bodyTemp) + degree_sign + 'C')
-        self.label_info_bt_val.config(bg="gray52")
+        self.label_info_bt_val.config(bg="gray48")
         if bodyTemp > 40:
             self.label_info_bt_val.config(bg="red")
         elif bodyTemp < 32:
             self.label_info_bt_val.config(bg="red")
-        elif bodyTemp>32 and bodyTemp>40:
-            self.label_info_bt_val.config(bg="gray62")
+        else:
+            self.label_info_bt_val.config(bg="gray48")
         if self.paused == False:
-            self.after(1000, self.update_body_temp)
+            self.after(1750, self.update_body_temp)
 
     def add_body_temp(self, line, y):
         coords = self.canvas_bt.coords(line)
@@ -295,9 +295,15 @@ class Vitals(customtkinter.CTk):
         self.add_blood_pres_low(self.bp_low_line)
         self.canvas_bp.xview_moveto(1.0)
         self.label_info_bp_val.set_text(str(bloodPresSys) + '/' + str(bloodPresDias))
-        self.label_info_bp_val.config(bg="red")
+        self.label_info_bp_val.config(bg="gray48")
+        if bloodPresDias > 140 or bloodPresSys > 140:
+            self.label_info_bp_val.config(bg="red")
+        elif bloodPresDias < 40 or bloodPresSys < 40:
+            self.label_info_bp_val.config(bg="red")
+        else:
+            self.label_info_bp_val.config(bg="gray48")
         if self.paused == False:
-            self.after(1000, self.update_blood_pres)
+            self.after(1750, self.update_blood_pres)
 
     def add_blood_pres_dias(self, line, y):
         coords = self.canvas_bp.coords(line)
@@ -345,8 +351,15 @@ class Vitals(customtkinter.CTk):
         self.add_heart_rate_high(self.hr_high_line)
         self.canvas_hr.xview_moveto(1.0)
         self.label_info_hr_val.set_text(str(heartRate))
+        self.label_info_hr_val.config(bg="gray48")
+        if heartRate > 110:
+            self.label_info_hr_val.config(bg="red")
+        elif heartRate < 40:
+            self.label_info_hr_val.config(bg="red")
+        else:
+            self.label_info_hr_val.config(bg="gray48")
         if self.paused == False:
-            self.after(1000, self.update_heart_rate)
+            self.after(1750, self.update_heart_rate)
 
     def add_heart_rate(self, line, y):
         coords = self.canvas_hr.coords(line)
@@ -404,7 +417,7 @@ class Vitals(customtkinter.CTk):
 def getSensorVitals():
         sensorValuesInt = [0, 0, 0, 0]
         sensorValues = piSerialHandlerV2.getSensorValues()
-        sensorValuesInt[0] = round(float(sensorValues[0]),2)
+        sensorValuesInt[0] = round(float(sensorValues[0]) + float(5),2)
         for i in range(1, len(sensorValues)):
                 sensorValuesInt[i] = int(sensorValues[i])
         return sensorValuesInt

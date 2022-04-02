@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import serial
 import time
 
@@ -56,7 +57,7 @@ def setStartMeasuring(val):
 		print('startMeasuringTrigger not enabled')
 
 def recalibrateSensors():
-        print('Telling the Arduino to recalibrate...')
+	print('Telling the Arduino to recalibrate...')
 	ser.write(b'1')
 
 	# read to get the acknowledgement from the Arduino

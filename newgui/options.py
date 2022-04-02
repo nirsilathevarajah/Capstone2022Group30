@@ -2,6 +2,8 @@
 import tkinter as tk
 from customtkinter import *
 import os
+from capstone_VitalAid import *
+from vitalsPage import *
 
 class Page(CTkFrame):
     def __init__(self, *args, **kwargs):
@@ -25,19 +27,19 @@ class FilesPage(Page):
    def __init__(self, *args, **kwargs):
        Page.__init__(self, *args, **kwargs)
        self.arr = []
-       self.frame_top = CTkFrame(master=self, width=1100, height=500, corner_radius=0)
+       self.frame_top = CTkFrame(master=self, width=1377, height=730, corner_radius=0, bg_color=None)
        self.frame_top.grid(column=0, row=0, sticky='w',  padx=20, pady=20)
        self.frame_top.grid_propagate(0)
 
-       self.frame_bottom= CTkFrame(master=self, width=1100, height=170, corner_radius=12)
+       self.frame_bottom= CTkFrame(master=self, width=1377, height=150, corner_radius=12)
        self.frame_bottom.grid(column=0, row=1, sticky='w', padx=20, pady=20)
        self.frame_bottom.grid_propagate(0)
 
        #buttons on the bottom frame
-       button_instuctions = CTkButton(self.frame_bottom,text="Delete", text_font=("Roboto Medium", -85), command=self.delete_files, fg_color=None, hover = True, border_width=2)
-       button_instuctions.grid(column=0, row=0, sticky='w',  padx=100, pady=40)
-       button_instuctions = CTkButton(self.frame_bottom, text="Export", text_font=("Roboto Medium", -85), command=self.export_files, fg_color=None, hover = True, border_width=2)
-       button_instuctions.grid(column=1, row=0, sticky='w',  padx=100, pady=40)
+       button_instuctions = CTkButton(self.frame_bottom,text="Delete", text_font=("Roboto Medium", -100), command=self.delete_files, fg_color=None, hover = True, border_width=2)
+       button_instuctions.grid(column=0, row=0, sticky='w',  padx=150, pady=10)
+       button_instuctions = CTkButton(self.frame_bottom, text="Export", text_font=("Roboto Medium", -100), command=self.export_files, fg_color=None, hover = True, border_width=2)
+       button_instuctions.grid(column=1, row=0, sticky='w',  padx=150, pady=10)
        self.update_files()
        
    
@@ -69,9 +71,11 @@ class FilesPage(Page):
                         filename = "Data/" + f 
                         source_path = os.path.join(path, filename)
                         os.remove(source_path)
-                        print("Success - " + source_path + " removed") 
+                        print("Success - " + source_path + " removed")
+                        self.pop_up_window("Delete Successful") 
                 except:
                         print("No file named " + source_path)
+                        self.pop_up_window("Delete Unsuccessful")
         print("Length of self arr " + str(len(self.arr)))
         self.remove_files(checked_files)
         self.update_files()
@@ -94,13 +98,13 @@ class FilesPage(Page):
        
    def update_files(self):
        print("Updating Files")
-       canvas = tk.Canvas(self.frame_top, bg="gray22", border_color=None)
+       canvas = tk.Canvas(self.frame_top, border_color=None, width = 1375, height=730, bg_color=None)
        canvas.grid(row=0, column=0, sticky="news")
        filenames = next(os.walk("Data/"))[2]
        self.arr = []
        for i in range(len(filenames)):
            self.arr.append(i)
-           self.arr[i] = CTkCheckBox(canvas, text=filenames[i], text_font=("Roboto Medium", -60), width=44, height=44)
+           self.arr[i] = CTkCheckBox(canvas, text=filenames[i], text_font=("Roboto Medium", -85), width=80, height=80)
            self.arr[i].pack(side = "top")
        
    def export_files(self):
@@ -109,18 +113,21 @@ class FilesPage(Page):
         
         #Check for inserted USB
         if usb_detected() == False:
-            return
+            self.pop_up_window("Export Unsuccessful\n" +
+                                " USB not found")
         else: 
         #Set up paths
             dest_usb = get_USB_name()
             path = os.getcwd()
             folder = "VitalAidExport"
             
+            test_path = dest_usb + "/" + folder + "/"
             
-            CHECK_FOLDER = os.path.isdir(folder)
+            
+            CHECK_FOLDER = os.path.isdir(test_path)
             
             if not CHECK_FOLDER:
-                    os.mkdir(folder)
+                    os.mkdir(dest_usb + "/" + folder)
                     print("Folder created")
             else:
                     print("folder already exists")
@@ -130,17 +137,36 @@ class FilesPage(Page):
             
             
             #Loops through + copies files in source folder
-            for f in files: 
+            for f in files:
                 try:
                     filename = "Data/" + f 
                     source_path = os.path.join(path, filename) 
                     x = shutil.copy(source_path, dest_path) 
                     print("Success - " + x) 
+                    self.pop_up_window("Export Successful")
                 except: 
-                    print("No file named " + filename)  
+                    print("No file named " + filename) 
+                    self.pop_up_window("Export Unsuccessful")
+                    
+   def pop_up_window(self, s):
+        self.toplevel = CTkToplevel()
+        center_window(self.toplevel, 750, 400)
+        frame1 = customtkinter.CTkFrame(self.toplevel, height = 650, width= 350, bg_color = "white")
+        frame1.pack()
+        label5 = customtkinter.CTkLabel(frame1, text= s, text_font=("Roboto Medium", -70))
+        label5.grid(row=1, column=0, pady=20, padx=20)
+        self.button5 = customtkinter.CTkButton(frame1, text="OK", text_font=("Roboto Medium", -90), command=self.close, border_width=2)
+        self.button5.grid(row=3, column=0, pady=30, padx=20)
+        
+   def close(self):
+        print("Closeing")
+        self.toplevel.destroy()
+
         
    # def refresh(self):
            # self.__init__()
+    
+    
                 
 
         
@@ -172,16 +198,16 @@ class MainView(CTkFrame):
         label_1 = CTkLabel(master=frame_left, text="OPTIONS", text_font=("Roboto Medium", -60), fg_color=None)
         label_1.grid(row=0, column=0, pady=10, padx=10)
 
-        button_instuctions = CTkButton(master=frame_left, text="Instructions", text_font=("Roboto Medium", -70), height = 150, command=p1.show, fg_color=None, hover = True,border_width=2)
-        button_instuctions.grid(row=1, column=0, pady=10, padx=20)
+        button_instuctions = CTkButton(master=frame_left, text="Instruction", text_font=("Roboto Medium", -70), height = 250, command=p1.show, fg_color=None, hover = True,border_width=2)
+        button_instuctions.grid(row=2, column=0, pady=10, padx=20)
 
-        button_files = CTkButton(master=frame_left, text="      Files      ", text_font=("Roboto Medium", -70), height = 150, command=p3.show, fg_color=None, border_width=2)
-        button_files.grid(row=2, column=0, pady=10, padx=20)
+        button_files = CTkButton(master=frame_left, text="      Files      ", text_font=("Roboto Medium", -70), height = 250, command=p3.show, fg_color=None, border_width=2)
+        button_files.grid(row=1, column=0, pady=10, padx=20)
 
-        button_recalibrate = CTkButton(master=frame_left, text="Recalibrate", text_font=("Roboto Medium", -70), height = 150, command=p2.show, fg_color=None, border_width=2)
+        button_recalibrate = CTkButton(master=frame_left, text="Recalibrate", text_font=("Roboto Medium", -70), height = 250, command=p2.show, fg_color=None, border_width=2)
         button_recalibrate.grid(row=3, column=0, pady=10, padx=20)
 
-        button_close = CTkButton(master=frame_left, text="     Close     ", text_font=("Roboto Medium", -70), height = 150, command=p2.show, fg_color=None, border_width=2)
+        button_close = CTkButton(master=frame_left, text="    <- BACK    ", text_font=("Roboto Medium", -70), height = 80, command=self.destroy, fg_color=None, bg_color ='red', border_width=2)
         button_close.grid(row=4, column=0, pady=10, padx=20)
 
         # buttonframe = tk.Frame(self)
@@ -201,8 +227,11 @@ class MainView(CTkFrame):
         # b2.pack(side="left")
         # b3.pack(side="left")
 
-        p1.show()
+        p3.show()
         
+        def close_button(self):
+            self.destroy()
+            
 def usb_detected():
         usb_path = "/media/pi/"
         pi_detected = len(os.listdir(usb_path))
@@ -220,6 +249,17 @@ def get_USB_name():
 def button_event():
     print("Button pressed")
     
+    
+def center_window(root, width=400, height=300):
+	screen_width = root.winfo_screenwidth()
+	screen_height = root.winfo_screenheight()
+	# calculate x and y coordinates for the Tk root window
+	x = (screen_width/2) - (width/2)
+	y = (screen_height/2) - (height/2)
+	# set the dimensions of the screen 
+	# and where it is placed
+	root.geometry('%dx%d+%d+%d' % (width, height, x, y))
+    
 
 # if __name__ == "__main__":
     # root = CTk()
@@ -232,11 +272,11 @@ def button_event():
     # app.start()
 
 # if __name__ == "__main__":
-#     root = CTkToplevel()
-#     screen_width = root.winfo_screenwidth()
-#     screen_height = root.winfo_screenheight()
-#     main = MainView(root)
-#     main.pack(side="top", fill="both", expand=True)
-#     root.title("VitalAid")
-#     root.geometry(str(screen_width) + "x" + str(screen_height))
-#     root.mainloop()
+    # root = CTk()
+    # screen_width = root.winfo_screenwidth()
+    # screen_height = root.winfo_screenheight()
+    # main = MainView(root)
+    # main.pack(side="top", fill="both", expand=True)
+    # root.title("VitalAid")
+    # root.geometry(str(screen_width) + "x" + str(screen_height))
+    # root.mainloop()
