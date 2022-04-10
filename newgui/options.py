@@ -3,7 +3,7 @@ import tkinter as tk
 from customtkinter import *
 import os
 from capstone_VitalAid import *
-from vitalsPage import *
+import vitalsPage
 
 class Page(CTkFrame):
     def __init__(self, *args, **kwargs):
@@ -14,8 +14,20 @@ class Page(CTkFrame):
 class InstructionsPage(Page):
    def __init__(self, *args, **kwargs):
        Page.__init__(self, *args, **kwargs)
-       label = CTkLabel(self, text="This is page 1")
-       label.pack(side="top", fill="both", expand=True)
+       label = CTkLabel(self, text= "1.	Make sure the sensors are secure\n" + 
+                                    "         on the casualty\n" +
+                                    "2.	Try placing the sensors another\n" + 
+                                    "     finger (either index or ring)\n" +
+                                    "3.	Try placing the sensors on another hand\n" + 
+                                    "4.	If the casualty has nail polish\n" +
+                                    "   on their finger, move it to another\n" + 
+                                    "    finger or remove it.  Without this, \n" +
+                                    "        the values will be lower \n" +
+                                    "           than expected.\n" +
+                                    "5.	Recalibrate the sensors by\n" + 
+                                    "      pressing “recalibrate”.",
+                                    text_font=("Roboto Medium", -55), justify = 'left')
+       label.pack(side="top", fill="both", expand=True, anchor = 'w')
 
 class RecalibratePage(Page):
    def __init__(self, *args, **kwargs):
@@ -167,9 +179,6 @@ class FilesPage(Page):
            # self.__init__()
     
     
-                
-
-        
 
 class MainView(CTkFrame):
     def __init__(self, *args, **kwargs):
@@ -229,8 +238,6 @@ class MainView(CTkFrame):
 
         p3.show()
         
-        def close_button(self):
-            self.destroy()
             
 def usb_detected():
         usb_path = "/media/pi/"
@@ -270,6 +277,8 @@ def center_window(root, width=400, height=300):
     # root.mainloop()
     # app = App()
     # app.start()
+    
+
 
 # if __name__ == "__main__":
     # root = CTk()

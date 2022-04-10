@@ -35,7 +35,7 @@ class App(customtkinter.CTk):
 
         self.label_1 = customtkinter.CTkLabel(master=self.frame_right,
                                               text="Instructions:\n" +
-                                                    "1. Strap device onto any side of casulaty's forearm\n" +
+                                                    "1. Strap device onto any side of casualty's forearm\n" +
                                                     "2. Place Temparture Sensor on the wrist\n" +
                                                     "3. Place Heart Rate and Blood Pressure Sensor\n" + 
                                                     " an any finger.\n"+ 
@@ -50,13 +50,13 @@ class App(customtkinter.CTk):
     def button_event(self):
         print("Button pressed")
         #self.frame_right.destroy()
-        toplevel = customtkinter.CTkToplevel()
+        toplevel = customtkinter.CTk()
         center_window(toplevel, 300, 150)
         frame1 = customtkinter.CTkFrame(toplevel)
         frame1.pack()
         label5 = customtkinter.CTkLabel(frame1, text= "CALIBRATING, PLEASE WAIT")
         label5.grid(row=1, column=0, pady=10, padx=20)
-        piSerialHandlerV2.setStartMeasuring(True)
+        toplevel.after(3000, piSerialHandlerV2.setStartMeasuring(True))
         toplevel.destroy()
         self.on_closing()
         app= vitalsPage.Vitals()

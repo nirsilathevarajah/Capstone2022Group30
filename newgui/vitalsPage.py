@@ -114,12 +114,12 @@ class Vitals(customtkinter.CTk):
         self.create_bt_canvas()
         self.create_bp_canvas()
         self.create_hr_canvas()
-
+        
     def button_options(self):
         root = customtkinter.CTk()
         main = options.MainView(root)
         main.pack(side="top", fill="both", expand=True)
-        root.title("VitalAid")
+        root.title("Options")
         root.geometry(str(root.winfo_screenwidth()) + "x" + str(root.winfo_screenheight()))
         root.mainloop()
 
@@ -413,6 +413,7 @@ class Vitals(customtkinter.CTk):
         #norm_val = (xmax-xmin)-(1-norm_val)
         norm_val = (1-((y - xmin)/(xmax - xmin)))*(self.canvas_height)
         return norm_val
+
         
 def getSensorVitals():
         sensorValuesInt = [0, 0, 0, 0]
