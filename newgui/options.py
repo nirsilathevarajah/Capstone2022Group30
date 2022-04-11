@@ -4,6 +4,7 @@ from customtkinter import *
 import os
 from capstone_VitalAid import *
 import vitalsPage
+import piSerialHandlerV2
 
 class Page(CTkFrame):
     def __init__(self, *args, **kwargs):
@@ -14,26 +15,46 @@ class Page(CTkFrame):
 class InstructionsPage(Page):
    def __init__(self, *args, **kwargs):
        Page.__init__(self, *args, **kwargs)
-       label = CTkLabel(self, text= "1.	Make sure the sensors are secure\n" + 
-                                    "         on the casualty\n" +
-                                    "2.	Try placing the sensors another\n" + 
-                                    "     finger (either index or ring)\n" +
-                                    "3.	Try placing the sensors on another hand\n" + 
-                                    "4.	If the casualty has nail polish\n" +
-                                    "   on their finger, move it to another\n" + 
-                                    "    finger or remove it.  Without this, \n" +
-                                    "        the values will be lower \n" +
-                                    "           than expected.\n" +
-                                    "5.	Recalibrate the sensors by\n" + 
-                                    "      pressing “recalibrate”.",
+       instructions_label = CTkLabel(self, text = "Instructions", text_font=("Roboto Medium", -65))
+       instructions_label.pack()
+       label = CTkLabel(self, text= "1)Make sure the sensors are placed securely n\n" + 
+                                    "       on the casualty\n" +
+                                    "2)Try placing the sensors another finger\n" + 
+                                    "       (either index or ring)\n" +
+                                    "3)Try placing the sensors on another hand\n" + 
+                                    "4)If the casualty has nail polish\n" +
+                                    "      on their finger, move it to another\n" + 
+                                    "      finger or remove it.  Without this, \n" +
+                                    "      the values will be lower than expected \n" +
+                                    "5)Recalibrate the sensors by pressing 'recalibrate'. \n",
                                     text_font=("Roboto Medium", -55), justify = 'left')
        label.pack(side="top", fill="both", expand=True, anchor = 'w')
 
 class RecalibratePage(Page):
    def __init__(self, *args, **kwargs):
        Page.__init__(self, *args, **kwargs)
-       label = CTkLabel(self, text="This is page 2")
-       label.pack(side="top", fill="both", expand=True)
+       label_1 = customtkinter.CTkLabel(master=self,
+                                              text="Re-Calibration:\n" +
+                                                    "Press the 'RECALIBRATE' button to \n" +
+                                                    "recalibrate the sensors.\n" +
+                                                    "Please keep sensor on finger during re-calibration",
+                                              text_font=("Roboto Medium", -55),  # font name and size in px
+                                              fg_color=None)
+       label_1.place(relx=0.5, rely=0.12, anchor=tkinter.N)
+       button_5 = customtkinter.CTkButton(master=self, width=420, height=200, text="Re-Calibrate", text_font=("Roboto Medium", -150), command=self.recalibrate_event)
+       button_5.place(relx=0.5, rely=0.65, anchor=tkinter.N)
+    
+   def recalibrate_event(self):
+       piSerialHandlerV2.recalibrateSensors()
+       self.toplevel = CTkToplevel()
+       center_window(self.toplevel, 750, 400)
+       frame1 = customtkinter.CTkFrame(self.toplevel, height = 170, width= 500, bg_color = "white")
+       frame1.pack()
+       label5 = customtkinter.CTkLabel(frame1, text= "Recalibration Complete", text_font=("Roboto Medium", -60))
+       label5.grid(row=1, column=0, pady=10, padx=10)
+       self.button5 = customtkinter.CTkButton(frame1, text="OK", text_font=("Roboto Medium", -90), command=self.toplevel.destroy, border_width=2)
+       self.button5.grid(row=2, column=0, pady=20, padx=10)
+        
 
 class FilesPage(Page):
    def __init__(self, *args, **kwargs):
@@ -238,7 +259,6 @@ class MainView(CTkFrame):
 
         p3.show()
         
-            
 def usb_detected():
         usb_path = "/media/pi/"
         pi_detected = len(os.listdir(usb_path))
